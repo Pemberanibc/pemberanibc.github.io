@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Draw control · Pemberani Tournament Edisi 3.0</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#050505">
+<link rel="icon" href="../assets/icon.png">
+<link rel="stylesheet" href="css/draw.css">
+</head>
+<body class="control">
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <img src="../assets/crest.png" alt="Pemberani Badminton Club crest" width="459" height="640">
+      <div><h1>PEMBERANI TOURNAMENT</h1><p><b>EDISI 3.0</b><span>DRAW CONTROL</span></p></div>
+    </div>
+    <div class="top-right"><span class="chip" id="cloudChip">This laptop only</span></div>
+  </header>
+
+  <div class="cgrid">
+    <div>
+      <section class="panel">
+        <h2>Live draw</h2>
+        <div class="status">
+          <div class="step"><span id="stepNo">00</span><small>/12</small></div>
+          <div><p class="now" id="nowLabel"></p><p class="pair" id="nowPair"></p><p class="sub" id="nowSub"></p></div>
+        </div>
+        <div class="flow">
+          <button class="btn" id="cStart" type="button">Start draw<small>Step 1</small></button>
+          <button class="btn" id="cDraw" type="button">Draw next pair<small>Spin the wheel</small></button>
+          <button class="btn" id="cReveal" type="button">Reveal group<small>A or B</small></button>
+          <button class="btn" id="cNext" type="button">Next draw<small>Clear the stage</small></button>
+        </div>
+        <div class="row">
+          <button class="btn" id="cPause" type="button">Pause animation</button>
+          <button class="btn" id="cResume" type="button">Resume animation</button>
+          <button class="btn" id="cUndo" type="button">Undo last draw</button>
+          <button class="btn danger" id="cReset" type="button">Reset draw</button>
+        </div>
+        <div class="row">
+          <button class="btn" id="cScreen" type="button">Fullscreen presentation</button>
+          <button class="btn" id="cSound" type="button">Sound on</button>
+          <button class="btn" id="cView" type="button">View final results</button>
+        </div>
+        <p class="note" style="margin-top:1rem">The gold button is the next step. <b>Space bar</b> presses it. Sound plays on the audience screen.</p>
+      </section>
+
+      <section class="panel">
+        <h2>Groups · <span id="remainN">12</span> pairs still in the wheel</h2>
+        <div class="mini">
+          <div><h3>GROUP A <span id="mCapA">0/6</span></h3><ol id="mA"></ol></div>
+          <div><h3>GROUP B <span id="mCapB">0/6</span></h3><ol id="mB"></ol></div>
+        </div>
+        <div class="remain" id="remain" style="margin-top:1.1rem"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Results</h2>
+        <div class="row" style="margin-top:0">
+          <button class="btn" id="cJson" type="button">Download JSON</button>
+          <button class="btn" id="cCsv" type="button">Download CSV</button>
+          <button class="btn" id="cImage" type="button">Export as image</button>
+          <button class="btn" id="cPrint" type="button">Print results</button>
+        </div>
+        <p class="note" style="margin-top:.9rem">Exports work at any time and contain whatever has been drawn so far. Progress is saved in this browser after every step; refreshing the page continues the draw.</p>
+      </section>
+    </div>
+
+    <div>
+      <section class="panel">
+        <h2>Draw history</h2>
+        <ol class="history" id="cHistory"></ol>
+      </section>
+
+      <section class="panel">
+        <h2>Audience screen</h2>
+        <p class="note"><b>Projector or TV plugged into this laptop:</b> press <b>Fullscreen presentation</b>, drag the new window onto the big screen and click its <b>Fullscreen</b> button. It follows this panel instantly and needs no internet.</p>
+        <p class="note" style="margin-top:.8rem"><b>A different device</b> (smart TV, second laptop, phones): sign in below with a scorer account, then open this address on that device:<br><code id="cloudUrl"></code></p>
+        <form id="cloudForm" autocomplete="on">
+          <input class="field" id="cEmail" type="email" placeholder="Scorer email" autocomplete="username" required>
+          <input class="field" id="cPass" type="password" placeholder="Password" autocomplete="current-password" required>
+          <div class="row"><button class="btn" id="cSignIn" type="submit">Sign in and share online</button><button class="btn" id="cSignOut" type="button" hidden>Stop sharing</button></div>
+        </form>
+        <p class="err" id="cloudMsg"></p>
+        <div class="row" id="cloudChoice" hidden><button class="btn" id="useCloud" type="button">Continue the online draw</button><button class="btn danger" id="useLocal" type="button">Replace it with this laptop's draw</button></div>
+      </section>
+    </div>
+  </div>
+</div>
+<dialog class="confirm" id="confirm"><form method="dialog"><h2 id="confirmTitle"></h2><p id="confirmText"></p><div><button class="btn" value="cancel">Cancel</button><button class="btn danger" value="ok" id="confirmOk">Confirm</button></div></form></dialog>
+<div id="printSheet"></div>
+<script type="module" src="js/control.js"></script>
+</body>
+</html>
