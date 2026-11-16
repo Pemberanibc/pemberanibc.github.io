@@ -18,12 +18,11 @@ const shot = (p, n) => out && p.screenshot({ path: `${out}/${n}.png` });
   const browser = await chromium.launch();
   const ctx = await browser.newContext({ viewport: { width: 1920, height: 1080 }, acceptDownloads: true });
   const arena = await ctx.newPage(), control = await ctx.newPage(); watch(arena, 'arena'); watch(control, 'control');
-  await arena.goto(BASE + '?present'); await control.goto(BASE + 'control.html');
+  await arena.goto(BASE); await control.goto(BASE + 'control.html');
   await control.waitForFunction(() => window.__draw); await arena.waitForFunction(() => window.__draw);
 
-  // --- presentation mode hides every organiser control ---
-  ok('presentation mode hides organiser controls', await arena.evaluate(() => [...document.querySelectorAll('.org')].every((e) => getComputedStyle(e).display === 'none')));
-  ok('header shows title, LIVE DRAW, fullscreen and sound buttons', await arena.evaluate(() => /PEMBERANI TOURNAMENT/.test(document.querySelector('.brand h1').textContent) && /LIVE GROUP DRAW/.test(document.querySelector('.brand p').textContent) && document.querySelector('#liveTag').offsetWidth > 0 && document.querySelector('#btnFs').offsetWidth > 0 && document.querySelector('#btnSound').offsetWidth > 0 && document.querySelector('.brand img').naturalWidth > 0));
+  ok('header shows crest, title and LIVE DRAW; no presentation / fullscreen / sound buttons', await arena.evaluate(() => /PEMBERANI TOURNAMENT/.test(document.querySelector('.brand h1').textContent) && /LIVE GROUP DRAW/.test(document.querySelector('.brand p').textContent) && document.querySelector('#liveTag').offsetWidth > 0 && document.querySelector('.brand img').naturalWidth > 0 && !document.querySelector('#btnFs, #btnSound, #btnPresent') && !/presentation|fullscreen|sound o/i.test(document.querySelector('.top').textContent + document.querySelector('#dock').textContent)));
+  ok('control panel has no presentation / fullscreen / sound buttons', await control.evaluate(() => !document.querySelector('#cScreen, #cSound') && ![...document.querySelectorAll('button')].some((b) => /fullscreen|sound o|presentation/i.test(b.textContent))));
   ok('all 12 pairs preloaded with exact spelling', JSON.stringify(await arena.evaluate(() => [...document.querySelectorAll('#pairList li span')].map((e) => e.textContent))) === JSON.stringify(PAIRS));
 
   // --- controls gating ---
@@ -79,7 +78,7 @@ const shot = (p, n) => out && p.screenshot({ path: `${out}/${n}.png` });
     }
     if (i === 8) { await arena.reload(); await arena.waitForFunction(() => window.__draw); await arena.waitForTimeout(600); const b = await boards(arena); ok('refresh between draws keeps groups and history', JSON.stringify(b.A) === JSON.stringify(names(s, 'A')) && JSON.stringify(b.B) === JSON.stringify(names(s, 'B')) && b.rem === s.remaining.length); }
     const h = s.history[s.history.length - 1]; seen.push(h.pair);
-    const b = await boards(arena);
+    await arena.waitForTimeout(250); const b = await boards(arena);
     if (JSON.stringify(b.A) !== JSON.stringify(names(s, 'A')) || JSON.stringify(b.B) !== JSON.stringify(names(s, 'B')) || b.rem !== 11 - i) ok(`boards match state after draw ${i + 1}`, false);
     if (i === 6) await shot(arena, 'p2-allocated-present');
     if (i < 11) await control.click('#cNext');
@@ -117,23 +116,20 @@ const shot = (p, n) => out && p.screenshot({ path: `${out}/${n}.png` });
   ok('refresh after completion still shows the final results', await solo.evaluate(() => !document.querySelector('#final').hidden));
   await solo.click('#btnBackArena'); await solo.click('#btnHistory');
   ok('history drawer opens without interrupting the draw', await solo.evaluate(() => !document.querySelector('#historyDrawer').hidden && document.querySelectorAll('#historyList li').length === 12)); await solo.click('#btnHistoryClose');
-  await solo.click('#btnSound'); await control.waitForTimeout(400); ok('SOUND toggle is shared by every screen', (await state(control)).sound === false && /off/i.test(await control.$eval('#cSound', (e) => e.textContent))); await solo.click('#btnSound');
-  await solo.click('#btnFs'); await solo.waitForTimeout(400); const fs1 = await solo.evaluate(() => !!document.fullscreenElement); if (fs1) await solo.click('#btnFs');
-  ok('FULLSCREEN button enters fullscreen', fs1);
-  await solo.click('#btnPresent'); ok('PRESENTATION MODE button hides the dock', await solo.evaluate(() => getComputedStyle(document.querySelector('#dock')).display === 'none')); await solo.keyboard.press('p');
-  await solo.click('#btnReset'); await solo.click('#confirmOk'); await solo.keyboard.press('Space'); await solo.keyboard.press('Space');
+  await solo.click('#btnReset'); await solo.click('#confirmOk'); await phase(solo, 'idle'); await solo.keyboard.press('Space'); await phase(solo, 'ready'); await solo.keyboard.press('Space');
   ok('space bar drives the draw (start, then spin)', (await state(solo)).phase === 'spinning');
   await phase(solo, 'picked'); await solo.click('#btnUndo'); await solo.click('#confirmOk'); await solo.click('#btnReset'); await solo.click('#confirmOk');
 
   // --- layouts: 4K TV, phone, reduced motion ---
-  for (const [tag, opts] of [['4k', { viewport: { width: 3840, height: 2160 } }], ['phone', devices['iPhone 13']], ['reduced', { viewport: { width: 1366, height: 768 }, reducedMotion: 'reduce' }]]) {
+  for (const [tag, opts] of [['4k', { viewport: { width: 3840, height: 2160 } }], ['phone', devices['iPhone 13']], ['phone-small', devices['iPhone SE']], ['phone-landscape', devices['iPhone 13 landscape']], ['reduced', { viewport: { width: 1366, height: 768 }, reducedMotion: 'reduce' }]]) {
     const c2 = await browser.newContext(opts), p = await c2.newPage(); watch(p, tag);
-    await p.goto(BASE + (tag === 'phone' ? '' : '?present')); await p.waitForFunction(() => window.__draw);
-    await p.evaluate(() => { const s = window.__draw.store; s.dispatch('start'); s.dispatch('drawNext'); });
+    await p.goto(BASE); await p.waitForFunction(() => window.__draw); await p.waitForTimeout(400); await shot(p, 'layout-' + tag + '-idle');
+    if (opts.hasTouch) { await p.tap('#btnPrimary'); await p.waitForTimeout(700); await shot(p, 'layout-' + tag + '-ready'); ok(`${tag}: START button within thumb reach and tappable; sound unlocked by that tap`, (await state(p)).phase === 'ready' && await p.evaluate(() => { const r = document.querySelector('#btnPrimary').getBoundingClientRect(); return r.bottom <= innerHeight + 1 && r.top >= 0 && r.height >= 40; })); await p.tap('#btnPrimary'); }
+    else await p.evaluate(() => { const s = window.__draw.store; s.dispatch('start'); s.dispatch('drawNext'); });
     await phase(p, 'picked', 12000); await p.waitForTimeout(tag === 'reduced' ? 300 : 2300);
     const m = await p.evaluate(() => { const r = (sel) => document.querySelector(sel).getBoundingClientRect(); const n = r('#rvName'), w = r('#wheel'), a = r('#boardA'), b = r('#boardB'); return { overflowX: document.documentElement.scrollWidth > innerWidth + 1, name: n.left >= 0 && n.right <= innerWidth + 1 && n.height > 20, wheel: w.width > innerWidth * 0.25 && w.left >= 0 && w.right <= innerWidth + 1, boards: a.right <= innerWidth + 1 && b.right <= innerWidth + 1 && a.width > 100, boardsOnScreen: a.top >= 0 && b.bottom <= innerHeight + 1, nameH: n.height, vh: innerHeight }; });
     await shot(p, 'layout-' + tag);
-    if (tag === 'phone') ok('phone: vertical layout, no sideways scrolling, wheel / name / boards within the width', !m.overflowX && m.name && m.wheel && m.boards);
+    if (tag === 'phone' || tag === 'phone-small') ok(tag + ': vertical layout, no sideways scrolling, wheel / name / boards within the width', !m.overflowX && m.name && m.wheel && m.boards);
     else ok(`${tag}: wheel, selected pair and both boards inside the screen`, !m.overflowX && m.name && m.wheel && m.boards && m.boardsOnScreen, `name height ${Math.round(m.nameH)}px of ${m.vh}px`);
     await c2.close();
   }

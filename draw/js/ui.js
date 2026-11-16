@@ -13,6 +13,3 @@ export function historyHtml(s) {
   return s.history.map((h) => `<li><b>${pad2(h.order)}</b><span class="hp">${esc(h.pair)}</span><span class="hg g${h.group}">GROUP ${h.group}${h.allocation === 'auto' ? '<small>auto</small>' : ''}</span><time>${clockTime(h.at)}</time></li>`).join('');
 }
 export const PRIMARY_LABEL = { start: 'Start draw', drawNext: 'Draw next pair', revealGroup: 'Reveal group', next: 'Next draw' };
-export async function toggleFullscreen(el = document.documentElement) {
-  try { if (document.fullscreenElement) await document.exitFullscreen(); else await (el.requestFullscreen ? el.requestFullscreen() : el.webkitRequestFullscreen()); } catch (e) { console.warn('Fullscreen refused', e); }
-}

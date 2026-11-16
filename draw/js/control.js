@@ -9,7 +9,7 @@ let prevKey = '';
 const BTN = { start: '#cStart', drawNext: '#cDraw', revealGroup: '#cReveal', next: '#cNext' };
 
 function render() {
-  const v = store.view(), key = [v.rev, v.phase, v.paused, v.view, v.sound].join('|');
+  const v = store.view(), key = [v.rev, v.phase, v.paused, v.view].join('|');
   store.autoTick();
   if (key === prevKey) return; prevKey = key;
   const k = can(v), p = primaryAction(v), c = v.current, shown = c && v.phase !== 'spinning';
@@ -22,7 +22,6 @@ function render() {
   for (const [name, sel] of Object.entries(BTN)) { const b = $(sel); b.disabled = !k[name]; b.classList.toggle('next', p === name); }
   $('#cNext').firstChild.textContent = v.phase === 'allocated' && v.remaining.length === 0 ? 'Reveal final groups' : 'Next draw';
   $('#cPause').disabled = !k.pause; $('#cResume').disabled = !k.resume; $('#cUndo').disabled = !k.undo; $('#cReset').disabled = !k.reset;
-  $('#cSound').textContent = v.sound ? 'Sound on' : 'Sound off';
   $('#cView').disabled = !k.view; $('#cView').textContent = v.view === 'final' && v.phase === 'complete' ? 'Back to the arena' : 'View final results';
   for (const G of ['A', 'B']) { $('#m' + G).innerHTML = Array.from({ length: 6 }, (_, i) => `<li>${v.groups[G][i] !== undefined ? esc(v.pairs[v.groups[G][i]]) : ''}</li>`).join(''); $('#mCap' + G).textContent = `${v.groups[G].length}/6`; }
   $('#remainN').textContent = v.remaining.length;
@@ -36,9 +35,7 @@ $('#cStart').onclick = () => act('start'); $('#cDraw').onclick = () => act('draw
 $('#cPause').onclick = () => act('pause'); $('#cResume').onclick = () => act('resume');
 $('#cUndo').onclick = async () => { const v = store.view(), last = v.phase === 'picked' ? v.pairs[v.current.pairId] : v.history.length ? v.history[v.history.length - 1].pair : null; if (last && await confirmDialog({ title: 'Undo last draw?', text: `${last} goes back into the wheel and leaves its group.`, ok: 'Undo' })) act('undo'); };
 $('#cReset').onclick = async () => { if (await confirmDialog({ title: 'Reset the entire draw?', text: 'All 12 pairs return to the wheel and both groups are emptied. This cannot be undone.', ok: 'Reset draw' })) act('reset'); };
-$('#cSound').onclick = () => act('setSound', !store.view().sound);
 $('#cView').onclick = () => act('setView', store.view().view === 'final' ? 'arena' : 'final');
-$('#cScreen').onclick = () => window.open('./?present', 'pemberani-audience', 'popup,width=1280,height=720');
 $('#cJson').onclick = () => downloadJson(store.view()); $('#cCsv').onclick = () => downloadCsv(store.view());
 $('#cImage').onclick = () => downloadImage(store.view()); $('#cPrint').onclick = () => printResults(store.view());
 addEventListener('keydown', (e) => { if (e.code !== 'Space' || e.repeat || e.target.closest('input, button, dialog')) return; e.preventDefault(); const p = primaryAction(store.view()); if (p) act(p); });
