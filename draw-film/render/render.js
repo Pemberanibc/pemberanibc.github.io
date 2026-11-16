@@ -62,7 +62,7 @@ async function main() {
     const a = w * per, b = Math.min(total, a + per); if (a >= b) return null;
     const part = path.join(tmp, `part${w}.mp4`);
     const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps), '-c:v', 'png', '-i', '-',
-      '-vf', 'scale=in_range=pc:out_range=tv:out_color_matrix=bt709,format=yuv420p', '-c:v', 'libx264', '-preset', 'slow', '-crf', '20', '-maxrate', '8M', '-bufsize', '16M',
+      '-vf', 'scale=in_range=pc:out_range=tv:out_color_matrix=bt709,format=yuv420p', '-c:v', 'libx264', '-preset', 'slow', '-crf', '16', '-maxrate', '24M', '-bufsize', '48M',
       '-profile:v', 'high', '-level', '4.2', '-g', String(gop), '-keyint_min', String(gop), '-sc_threshold', '0', '-bf', '2', '-flags', '+cgop',
       '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-color_range', 'tv', '-r', String(fps), part], { stdio: ['pipe', 'inherit', 'inherit'] });
     const closed = new Promise((res, rej) => ff.on('close', (c) => (c ? rej(new Error('ffmpeg ' + c)) : res())));
@@ -77,7 +77,7 @@ async function main() {
   srv.close();
   const list = path.join(tmp, 'list.txt'); fs.writeFileSync(list, parts.filter(Boolean).map((p) => `file '${p}'`).join('\n'));
   const args = ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', list];
-  if (extra) args.push('-i', extra, '-c:a', 'aac', '-b:a', '256k', '-ar', '48000', '-shortest');
+  if (extra) args.push('-i', extra, '-c:a', 'aac', '-b:a', '320k', '-ar', '48000', '-shortest');
   args.push('-c:v', 'copy', '-movflags', '+faststart', out);
   await new Promise((res, rej) => spawn('ffmpeg', args, { stdio: 'inherit' }).on('close', (c) => (c ? rej(new Error('mux ' + c)) : res())));
   fs.rmSync(tmp, { recursive: true });
