@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Live Group Draw · Pemberani Tournament Edisi 3.0</title>
+<meta name="description" content="The official live group draw for Pemberani Tournament Edisi 3.0.">
+<meta name="theme-color" content="#050505">
+<link rel="icon" href="../assets/icon.png">
+<link rel="preload" href="fonts/anton-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/barlow-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/draw.css">
+</head>
+<body class="arena" data-phase="idle">
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<header class="top">
+  <div class="brand">
+    <img src="../assets/crest.png" alt="Pemberani Badminton Club crest" width="459" height="640">
+    <div>
+      <h1>PEMBERANI TOURNAMENT</h1>
+      <p><b>EDISI 3.0</b><span>LIVE GROUP DRAW</span></p>
+    </div>
+  </div>
+  <div class="top-right">
+    <span class="live" id="liveTag"><i></i><span>LIVE DRAW</span></span>
+    <span class="chip" id="syncChip" hidden></span>
+    <div class="tools">
+      <button class="tool org" id="btnHistory" type="button">History</button>
+      <button class="tool org" id="btnPresent" type="button" title="Hide the organiser controls (P)">Presentation mode</button>
+      <button class="tool" id="btnSound" type="button" aria-pressed="true">Sound on</button>
+      <button class="tool" id="btnFs" type="button" title="Fullscreen (F)">Fullscreen</button>
+    </div>
+  </div>
+</header>
+
+<main class="grid">
+  <section class="col col-left" aria-label="Remaining pairs">
+    <div class="counter">
+      <div><b id="remCount">12</b><span>Remaining</span></div>
+      <div><b>12</b><span>Total entries</span></div>
+    </div>
+    <h2 class="label">Pairs in the draw</h2>
+    <ol class="pairs" id="pairList"></ol>
+  </section>
+
+  <section class="col col-centre" aria-label="Draw wheel">
+    <div class="wheel-wrap">
+      <canvas id="wheel" role="img" aria-label="Draw wheel"></canvas>
+      <div class="stage" aria-live="polite">
+        <div class="st st-idle">
+          <p class="kicker">The official group draw</p>
+          <h2>12 PAIRS.<br>2 GROUPS.<br><em>ONE DRAW.</em></h2>
+        </div>
+        <div class="st st-reveal">
+          <p class="kicker" id="rvKicker">Pair 01 of 12</p>
+          <h2 id="rvName"></h2>
+          <div class="selector" id="selector">
+            <div class="tile" data-g="A"><span>GROUP</span><b>A</b><i id="capSelA">0/6</i></div>
+            <div class="vs">VS</div>
+            <div class="tile" data-g="B"><span>GROUP</span><b>B</b><i id="capSelB">0/6</i></div>
+          </div>
+          <p class="verdict" id="rvVerdict"></p>
+        </div>
+        <div class="paused" id="pausedTag">Paused</div>
+      </div>
+    </div>
+    <p class="caption" id="caption"></p>
+  </section>
+
+  <section class="col col-right" aria-label="Groups">
+    <div class="board" id="boardA" data-g="A"><header><h2>GROUP A</h2><span class="cap"><b id="capA">0</b>/6</span></header><ol></ol></div>
+    <div class="board" id="boardB" data-g="B"><header><h2>GROUP B</h2><span class="cap"><b id="capB">0</b>/6</span></header><ol></ol></div>
+  </section>
+</main>
+
+<footer class="dock org" id="dock">
+  <button class="btn primary" id="btnPrimary" type="button">Start draw</button>
+  <span class="hint" id="dockHint">Space bar = main button</span>
+  <div class="dock-right">
+    <button class="btn" id="btnPause" type="button">Pause animation</button>
+    <button class="btn" id="btnUndo" type="button">Undo last draw</button>
+    <button class="btn danger" id="btnReset" type="button">Reset draw</button>
+    <a class="btn ghost" href="control.html" target="pemberani-control">Control panel</a>
+  </div>
+</footer>
+
+<aside class="drawer" id="historyDrawer" aria-label="Draw history" hidden>
+  <header><h2>Draw history</h2><button class="tool" id="btnHistoryClose" type="button">Close</button></header>
+  <ol class="history" id="historyList"></ol>
+</aside>
+
+<section class="final" id="final" hidden aria-label="Final results">
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <div class="final-inner">
+    <header>
+      <img src="../assets/crest.png" alt="" width="459" height="640">
+      <div><p class="kicker">Pemberani Tournament · Edisi 3.0</p><h2>THE OFFICIAL GROUPS</h2></div>
+    </header>
+    <div class="final-groups">
+      <div class="fgroup" data-g="A"><h3><span>GROUP</span><b>A</b><i>Six pairs</i></h3><ol id="finalA"></ol></div>
+      <div class="fgroup" data-g="B"><h3><span>GROUP</span><b>B</b><i>Six pairs</i></h3><ol id="finalB"></ol></div>
+    </div>
+    <div class="closing">
+      <p class="l1"><span>12 PAIRS.</span> <span>2 GROUPS.</span> <em>ZERO MERCY.</em></p>
+      <p class="l2">THE ROAD TO PEMBERANI EDISI 3.0 STARTS NOW.</p>
+    </div>
+    <div class="final-actions org">
+      <button class="btn" id="btnBackArena" type="button">Back to the arena</button>
+      <button class="btn" id="btnJson" type="button">Download results (JSON)</button>
+      <button class="btn" id="btnCsv" type="button">Download results (CSV)</button>
+      <button class="btn" id="btnImage" type="button">Export results as image</button>
+      <button class="btn" id="btnPrint" type="button">Print results</button>
+    </div>
+  </div>
+</section>
+
+<button class="soundgate" id="soundGate" type="button" hidden>Click anywhere to switch the sound on</button>
+<dialog class="confirm" id="confirm"><form method="dialog"><h2 id="confirmTitle"></h2><p id="confirmText"></p><div><button class="btn" value="cancel">Cancel</button><button class="btn danger" value="ok" id="confirmOk">Confirm</button></div></form></dialog>
+<div id="printSheet"></div>
+<script type="module" src="js/arena.js"></script>
+</body>
+</html>

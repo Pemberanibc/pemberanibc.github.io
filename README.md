@@ -13,6 +13,7 @@ Both Edition 3.0 pages have an **EN / BM** switch at the top. The choice is reme
 | `index.html` | Everyone: the Edition 3.0 story (hero, statement, champions, format, players and pots, prizes) with a short "on court now" strip linking to the Match Centre |
 | `live.html` | The Match Centre: live courts, latest results, match of the day, fixtures, standings with the qualification race, bracket and pairs. Share this on the day |
 | `score.html` | Umpires and committee: tap-to-score console (sign-in required) |
+| `draw/` | The live group draw: audience screen (`draw/`) and organiser panel (`draw/control.html`). See `draw/README.md` |
 | `edition2/` | Edition 2.0 site and e-certificates, kept as an archive (`cert.html` in the root redirects there) |
 | `family-scoreboard.html` | Thursday Family Night live scoreboard (currently #2, Diwali Edition) |
 | `family-night-1.html` | Family Night #1 (8 Oct 2026), read-only archive |
