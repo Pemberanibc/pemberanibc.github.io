@@ -1,0 +1,150 @@
+{
+  "event": "PEMBERANI TOURNAMENT EDISI 3.0 — OFFICIAL GROUP DRAW",
+  "official": true,
+  "version": 1,
+  "generatedAt": "2026-11-16T03:04:23.138Z",
+  "seed": "b49c0bd92b80504ae740a963e0aedb2d5047ff1814eb1d1c41a49a05658fd4e7",
+  "algorithm": "HMAC-SHA256(seed, \"pemberani-e3-draw:\"+counter) stream, 32-bit rejection sampling; each step: uniform pick from remaining pool, then uniform A/B while both groups < 6, else auto",
+  "pairs": [
+    "Herman & Poknik",
+    "Charlie & Azlan",
+    "Aizat & Abg Mie",
+    "Syahir & Samad",
+    "Daus & Abg Fizan",
+    "Fauzie Gigi & Jai",
+    "Soul & Syaqir",
+    "Rosli & Nataman",
+    "Nizam & Satbeer",
+    "Muizz & Fareez",
+    "Adian & Pok",
+    "Rasheed & Abdel"
+  ],
+  "selections": [
+    {
+      "order": 1,
+      "pairId": 2,
+      "pair": "Aizat & Abg Mie",
+      "poolSize": 12,
+      "poolIndex": 2,
+      "group": "A",
+      "allocation": "random"
+    },
+    {
+      "order": 2,
+      "pairId": 6,
+      "pair": "Soul & Syaqir",
+      "poolSize": 11,
+      "poolIndex": 5,
+      "group": "A",
+      "allocation": "random"
+    },
+    {
+      "order": 3,
+      "pairId": 11,
+      "pair": "Rasheed & Abdel",
+      "poolSize": 10,
+      "poolIndex": 9,
+      "group": "B",
+      "allocation": "random"
+    },
+    {
+      "order": 4,
+      "pairId": 3,
+      "pair": "Syahir & Samad",
+      "poolSize": 9,
+      "poolIndex": 2,
+      "group": "A",
+      "allocation": "random"
+    },
+    {
+      "order": 5,
+      "pairId": 10,
+      "pair": "Adian & Pok",
+      "poolSize": 8,
+      "poolIndex": 7,
+      "group": "B",
+      "allocation": "random"
+    },
+    {
+      "order": 6,
+      "pairId": 7,
+      "pair": "Rosli & Nataman",
+      "poolSize": 7,
+      "poolIndex": 4,
+      "group": "A",
+      "allocation": "random"
+    },
+    {
+      "order": 7,
+      "pairId": 0,
+      "pair": "Herman & Poknik",
+      "poolSize": 6,
+      "poolIndex": 0,
+      "group": "B",
+      "allocation": "random"
+    },
+    {
+      "order": 8,
+      "pairId": 5,
+      "pair": "Fauzie Gigi & Jai",
+      "poolSize": 5,
+      "poolIndex": 2,
+      "group": "B",
+      "allocation": "random"
+    },
+    {
+      "order": 9,
+      "pairId": 9,
+      "pair": "Muizz & Fareez",
+      "poolSize": 4,
+      "poolIndex": 3,
+      "group": "B",
+      "allocation": "random"
+    },
+    {
+      "order": 10,
+      "pairId": 1,
+      "pair": "Charlie & Azlan",
+      "poolSize": 3,
+      "poolIndex": 0,
+      "group": "A",
+      "allocation": "random"
+    },
+    {
+      "order": 11,
+      "pairId": 4,
+      "pair": "Daus & Abg Fizan",
+      "poolSize": 2,
+      "poolIndex": 0,
+      "group": "A",
+      "allocation": "random"
+    },
+    {
+      "order": 12,
+      "pairId": 8,
+      "pair": "Nizam & Satbeer",
+      "poolSize": 1,
+      "poolIndex": 0,
+      "group": "B",
+      "allocation": "auto"
+    }
+  ],
+  "groups": {
+    "A": [
+      "Aizat & Abg Mie",
+      "Soul & Syaqir",
+      "Syahir & Samad",
+      "Rosli & Nataman",
+      "Charlie & Azlan",
+      "Daus & Abg Fizan"
+    ],
+    "B": [
+      "Rasheed & Abdel",
+      "Adian & Pok",
+      "Herman & Poknik",
+      "Fauzie Gigi & Jai",
+      "Muizz & Fareez",
+      "Nizam & Satbeer"
+    ]
+  }
+}

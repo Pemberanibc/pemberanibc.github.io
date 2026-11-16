@@ -54,7 +54,7 @@ async function main() {
     await browser.close(); srv.close(); return;
   }
   // ---- video ----
-  const WORKERS = 4, tmp = out + '.parts'; fs.mkdirSync(tmp, { recursive: true });
+  const WORKERS = 4, tmp = path.resolve(out) + '.parts'; fs.mkdirSync(tmp, { recursive: true });
   const b0 = await chromium.launch(); const probe = await openPage(b0, url, draw, meta); const total = process.env.MAXFRAMES ? +process.env.MAXFRAMES : probe.info.frames, fps = probe.info.fps; await b0.close();
   const gop = 150, per = Math.ceil(total / WORKERS); let done = 0;
   const started = Date.now();
