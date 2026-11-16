@@ -1,6 +1,6 @@
 // Broadcast sound design, synthesised live with the Web Audio API (no audio files, nothing to license).
 export function createSound() {
-  let ctx = null, master = null, enabled = true, amb = null, whir = null, noiseBuf = null;
+  let ctx = null, master = null, enabled = true, whir = null, noiseBuf = null;
   const ensure = () => {
     if (ctx) return ctx;
     const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null;
@@ -40,19 +40,10 @@ export function createSound() {
     },
   };
 
-  function ambience(on) {
-    if (!ctx) return;
-    if (on && !amb) {
-      const s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain(), lfo = ctx.createOscillator(), lg = ctx.createGain();
-      s.buffer = noiseBuf; s.loop = true; f.type = 'bandpass'; f.frequency.value = 420; f.Q.value = 0.45; g.gain.value = 0.0001;
-      g.gain.exponentialRampToValueAtTime(0.022, ctx.currentTime + 2.5); lfo.frequency.value = 0.13; lg.gain.value = 0.008;
-      lfo.connect(lg); lg.connect(g.gain); s.connect(f); f.connect(g); g.connect(master); s.start(); lfo.start(); amb = { s, g, lfo };
-    } else if (!on && amb) { const a = amb; amb = null; a.g.gain.cancelScheduledValues(ctx.currentTime); a.g.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.2); setTimeout(() => { try { a.s.stop(); a.lfo.stop(); } catch {} }, 900); }
-  }
   return {
     get locked() { return !ctx || ctx.state !== 'running'; },
-    async unlock() { const c = ensure(); if (!c) return false; if (c.state !== 'running') { try { await c.resume(); } catch {} } ambience(enabled); return c.state === 'running'; },
-    setEnabled(on) { enabled = !!on; if (ctx) { ambience(enabled && ctx.state === 'running'); if (!enabled) this.spin(0); } },
+    async unlock() { const c = ensure(); if (!c) return false; if (c.state !== 'running') { try { await c.resume(); } catch {} } return c.state === 'running'; },
+    setEnabled(on) { enabled = !!on; if (ctx && !enabled) this.spin(0); },
     play(name) { if (ok() && fx[name]) fx[name](); },
     // continuous wheel whir; speed 0..1
     spin(speed) {
