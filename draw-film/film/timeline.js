@@ -52,7 +52,7 @@
         plateAt: t + 1.62, reflow0: t + 1.8, reflow1: t + 2.4,
       };
       if (auto) {
-        s.reelStart = t + 2.0; s.reelEnd = t + 2.12; s.flyStart = t + 2.3; s.flyEnd = t + 2.78; s.end = t + 3.0;
+        s.reelStart = t + 2.0; s.reelEnd = t + 2.12; s.flyStart = t + 2.88; s.flyEnd = t + 3.36; s.end = t + 3.5;
         s.reel0 = reelPos; s.reel1 = reelPos + ((Math.round(reelPos) % 2 === (d.group === 'A' ? 0 : 1)) ? 0 : 1);
       } else {
         s.reelStart = t + 1.9; s.reelEnd = t + 2.75; s.flyStart = t + 2.88; s.flyEnd = t + 3.36; s.end = t + 3.5;
