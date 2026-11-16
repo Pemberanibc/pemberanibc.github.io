@@ -1,0 +1,12 @@
+{
+  "event": "PEMBERANI TOURNAMENT EDISI 3.0 — OFFICIAL GROUP DRAW",
+  "official": true,
+  "committedAt": "2026-11-16T03:04:23.138Z",
+  "file": "draw.json",
+  "bytes": 3187,
+  "sha256": "f683576218f921ee6fdc332ee7a1296116a0c4153b5b3c9e25cb1cb10d30cdb0",
+  "seedSha256": "ac9ad4a4c7babcfdd026456568bd2c33ae0b5f81b2ef4eb054e7b9ef93dd6831",
+  "rng": "Node.js crypto.randomBytes(32) (OS CSPRNG) -> 256-bit seed",
+  "node": "v22.23.4",
+  "note": "The seed and allocation are inside draw.json and stay sealed until the film is rendered."
+}
