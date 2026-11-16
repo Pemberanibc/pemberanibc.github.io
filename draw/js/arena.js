@@ -5,7 +5,7 @@ import { createStore } from './store.js';
 import { createWheel } from './wheel.js';
 import { createSound } from './sound.js';
 import { downloadJson, downloadCsv, downloadImage, printResults } from './results.js';
-import { $, esc, pad2, confirmDialog, historyHtml, PRIMARY_LABEL, toggleFullscreen } from './ui.js';
+import { $, esc, pad2, confirmDialog, historyHtml, PRIMARY_LABEL } from './ui.js';
 
 const params = new URLSearchParams(location.search);
 const follower = params.has('cloud');
@@ -14,15 +14,12 @@ const store = createStore({ follower });
 const wheel = createWheel($('#wheel'));
 const sound = createSound();
 const body = document.body;
-let present = params.has('present') || follower;
 let prev = null, lastFlip = null, hlStart = 0, finalShown = false, lastAngle = null;
 
 body.classList.toggle('follower', follower);
 if (reduced) body.classList.add('reduced');
 if (follower) { store.connectCloud(); store.onStatus((c) => { const chip = $('#syncChip'); chip.hidden = false; chip.dataset.s = c.status; chip.textContent = { connecting: 'Connecting…', waiting: 'Waiting for the organiser', live: 'Synced', offline: 'Offline — reconnecting', error: 'Sync error' }[c.status] || c.status; }); }
 
-function setPresent(on) { present = on; body.classList.toggle('present', on); $('#btnPresent').textContent = on ? 'Exit presentation' : 'Presentation mode'; if (on) $('#historyDrawer').hidden = true; requestAnimationFrame(() => wheel.resize()); }
-setPresent(present);
 
 // ---------- static lists ----------
 function renderLists(v) {
@@ -51,7 +48,7 @@ function fitName(el) { el.style.fontSize = ''; const max = el.parentElement.clie
 function renderStage(v) {
   body.dataset.phase = v.phase; body.classList.toggle('is-paused', v.paused);
   const c = v.current, order = c ? c.order : v.history.length + 1;
-  const cap = { idle: follower || present ? 'The draw will begin shortly' : 'Press START DRAW to open the ceremony', ready: `Draw ${pad2(order)} of 12 · Ready`, spinning: `Drawing pair ${pad2(order)} of 12`, picked: `Pair ${pad2(order)} of 12 drawn`, allocating: 'Allocating group', allocated: `Pair ${pad2(order)} of 12 allocated`, complete: 'Draw complete' }[v.phase];
+  const cap = { idle: follower ? 'The draw will begin shortly' : 'Press START DRAW to open the ceremony', ready: `Draw ${pad2(order)} of 12 · Ready`, spinning: `Drawing pair ${pad2(order)} of 12`, picked: `Pair ${pad2(order)} of 12 drawn`, allocating: 'Allocating group', allocated: `Pair ${pad2(order)} of 12 allocated`, complete: 'Draw complete' }[v.phase];
   $('#caption').textContent = cap;
   if (c && v.phase !== 'spinning') {
     $('#rvKicker').textContent = `Pair ${pad2(c.order)} of 12`;
@@ -68,8 +65,7 @@ function renderStage(v) {
   btn.disabled = !(p ? k[p] : v.phase === 'complete');
   $('#btnPause').textContent = v.paused ? 'Resume animation' : 'Pause animation'; $('#btnPause').disabled = !(k.pause || k.resume);
   $('#btnUndo').disabled = !k.undo; $('#btnReset').disabled = !k.reset;
-  $('#btnSound').textContent = v.sound ? 'Sound on' : 'Sound off'; $('#btnSound').setAttribute('aria-pressed', v.sound);
-  sound.setEnabled(v.sound); $('#soundGate').hidden = !(v.sound && sound.locked && v.phase !== 'idle');
+  $('#soundGate').hidden = !(follower && sound.locked && v.phase !== 'idle');   // the organiser's own taps switch sound on; a following screen needs one tap
 }
 
 function renderFinal(v) {
@@ -82,10 +78,17 @@ function renderFinal(v) {
 }
 
 // ---------- transitions -> sound ----------
+const portrait = matchMedia('(max-aspect-ratio: 1/1)');
 function onPhaseChange(v) {
   const from = prev ? prev.phase : null, to = v.phase;
   if (!prev || from === to && prev.rev === v.rev) return;
   if (prev.drawId !== v.drawId) return;
+  // on a phone the page is one column: follow the action
+  if (portrait.matches && from !== to) {
+    const smooth = reduced ? 'auto' : 'smooth';
+    if (to === 'allocated') setTimeout(() => $('.col-right').scrollIntoView({ behavior: smooth, block: 'center' }), 1500);
+    if (to === 'spinning' || to === 'ready') scrollTo({ top: 0, behavior: smooth });
+  }
   if (from === 'idle' && to === 'ready') sound.play('opening');
   if (to === 'picked' && from === 'spinning') { sound.spin(0); sound.play('reveal'); hlStart = performance.now(); }
   if (to === 'allocated' && from === 'allocating') { sound.play('group'); setTimeout(() => sound.play('confirm'), 650); }
@@ -166,23 +169,13 @@ if (!follower) {
   addEventListener('keydown', (e) => {
     if (e.target.closest('input, textarea, dialog') || e.repeat) return;
     if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); primary(); }
-    if (e.key === 'p' || e.key === 'P') setPresent(!present);
-    if (e.key === 'Escape' && present && !document.fullscreenElement) setPresent(false);
   });
 }
-$('#btnSound').onclick = () => { sound.unlock(); if (follower) { const on = $('#btnSound').getAttribute('aria-pressed') !== 'true'; sound.setEnabled(on); $('#btnSound').textContent = on ? 'Sound on' : 'Sound off'; $('#btnSound').setAttribute('aria-pressed', on); } else store.dispatch('setSound', !store.view().sound); };
-$('#btnFs').onclick = () => { sound.unlock(); toggleFullscreen(); };
-$('#btnPresent').onclick = () => setPresent(!present);
 $('#btnHistory').onclick = () => { $('#historyDrawer').hidden = !$('#historyDrawer').hidden; };
 $('#btnHistoryClose').onclick = () => { $('#historyDrawer').hidden = true; };
 $('#btnJson').onclick = () => downloadJson(store.view()); $('#btnCsv').onclick = () => downloadCsv(store.view());
 $('#btnImage').onclick = () => downloadImage(store.view()); $('#btnPrint').onclick = () => printResults(store.view());
-addEventListener('keydown', (e) => { if ((e.key === 'f' || e.key === 'F') && !e.target.closest('input, dialog')) toggleFullscreen(); });
 addEventListener('pointerdown', () => { sound.unlock().then(() => { $('#soundGate').hidden = true; }); }, { capture: true });
-document.addEventListener('fullscreenchange', () => { $('#btnFs').textContent = document.fullscreenElement ? 'Exit fullscreen' : 'Fullscreen'; requestAnimationFrame(() => wheel.resize()); });
-// hide the pointer and header tools when the presentation is left alone
-let idleTimer; const wake = () => { body.classList.remove('idle-ui'); clearTimeout(idleTimer); idleTimer = setTimeout(() => body.classList.add('idle-ui'), 3000); };
-addEventListener('pointermove', wake); wake();
 
 document.fonts.ready.then(() => { requestAnimationFrame(frame); });
 window.__draw = { store };          // for the automated end-to-end test

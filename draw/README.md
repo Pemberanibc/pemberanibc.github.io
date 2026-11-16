@@ -5,10 +5,9 @@ generator decides, and the big screen animates exactly what was decided.
 
 | Address | What it is |
 | --- | --- |
-| `draw/` | The draw arena. With the control dock on one laptop, or as the audience screen in presentation mode |
-| `draw/?present` | Audience screen: no organiser controls |
-| `draw/control.html` | Organiser control panel |
-| `draw/?cloud` | Audience screen on a **different device**, following the organiser over the internet |
+| `draw/` | The draw. Everything needed is on this one page: wheel, groups, and the buttons |
+| `draw/control.html` | Optional organiser panel (same buttons plus history, exports and online sharing) |
+| `draw/?cloud` | Read-only screen on **other devices**, following the organiser over the internet |
 
 Plain HTML, CSS and JavaScript modules, like the rest of this site: no build step, deploys with GitHub Pages as it is.
 (React was not used because the repository has no build pipeline; the code is still split into the same parts:
@@ -27,45 +26,39 @@ python3 -m http.server 8791
 
 Then open http://localhost:8791/draw/control.html . (Opening the files by double-click does not work; browsers block modules on `file://`.)
 
-## Conducting the draw
+## Conducting the draw (on a phone)
 
-Before the ceremony: open the control panel, press **Reset draw** if a rehearsal was run, and check the sound.
+Open `draw/` on the phone, held upright. Before the ceremony, press **Reset draw** if a rehearsal was run.
 
-1. Connect the projector or TV to the laptop as an **extended** display.
-2. Open `draw/control.html` and press **Fullscreen presentation**. Drag the new window to the big screen and click
-   its **Fullscreen** button (that click also switches the sound on).
-3. **Start draw** — opening sting, the wheel appears.
-4. **Draw next pair** — the wheel spins about 7 seconds and stops on the pair. The name is revealed.
-5. **Reveal group** — the A/B selector runs and lands on a group; the pair moves onto that board.
-   If one group is already full the pair goes to the other one automatically, and the screen says so.
-6. **Next draw** — clears the stage. Repeat 4 to 6 for all 12 pairs.
-7. After the twelfth pair the final reveal starts by itself. **View final results** switches between the
-   final screen and the arena.
+1. **Start draw** — opening sting, the wheel appears. This first tap also switches the sound on.
+2. **Draw next pair** — the wheel spins about 7 seconds and stops on the pair. The name is revealed.
+3. **Reveal group** — the A/B selector runs and lands on a group. The page scrolls to the group boards so
+   everyone sees the pair arrive. If one group is already full the pair goes to the other automatically, and the screen says so.
+4. **Next draw** — back to the wheel. Repeat 2 to 4 for all 12 pairs.
+5. After the twelfth pair the final reveal starts by itself, with the buttons to download, export as image and print.
 
-The gold button is always the next step, and the **space bar** presses it (also on the arena page, so a
-presenter clicker works). The control panel shows a pair only after the wheel has stopped.
+The big gold button is always the next step. Under it: **Pause animation** (freezes a spin or the A/B selector;
+press again to resume), **Undo last draw** (the pair returns to the wheel and leaves its group; asks first) and
+**Reset draw** (asks first). Buttons that are not allowed at that moment are greyed out: the next pair cannot be
+drawn until the previous one has a group. **History** (top right) lists every draw with its time.
 
-Other controls: **Pause / Resume animation** (freezes a spin or the A/B selector), **Undo last draw** (the pair
-returns to the wheel and leaves its group; asks first), **Reset draw** (asks first), **Sound on/off**.
-Buttons that are not allowed at that moment are disabled: the next pair cannot be drawn until the previous one has a group.
-
-**One laptop, one screen:** open `draw/` and use the dock at the bottom. **Presentation mode** (or the `P` key)
-hides the dock; the space bar keeps working. `F` toggles fullscreen.
+Sound is always on. On an iPhone, flip the silent switch off and turn the volume up, or nothing will be heard.
+To show the draw on a TV, mirror the phone (AirPlay / Smart View / Chromecast) and hold it sideways: the layout
+switches to the wide three-column arena.
 
 Progress is saved in the browser after every step. If the page is refreshed or the browser is reopened, the
-draw continues where it was, even in the middle of a spin.
+draw continues where it was, even in the middle of a spin. **Use one phone for the whole draw**: the saved draw
+lives in that phone's browser.
 
-## Second screen
+## Letting other phones watch
 
-- **Second window on the same laptop (recommended):** nothing to set up. Both windows share one saved state in
-  the browser and update each other instantly. No internet needed. They must be the same browser and profile.
-- **A different device (smart TV browser, another laptop, phones in the hall):** in the control panel, section
-  *Audience screen*, sign in with a scorer account. The panel then publishes each step to the tournament's
-  Firebase Realtime Database at `pt3/draw`, and any device that opens `draw/?cloud` follows it read-only.
-  This needs internet on both devices and the `pt3` rule from the main README (public read, admin write).
-  Without sign-in nothing is sent anywhere, and the `?cloud` screen says so instead of pretending to be in sync.
-  Note: **Committee tools → reset** in the scorer console clears everything under `pt3`, including the published
-  copy of the draw. The laptop keeps its own copy and publishes it again at the next step.
+Optional. On the organiser's device open `draw/control.html`, section *Audience screen*, and sign in with a
+scorer account. Each step is then published to the tournament's Firebase Realtime Database at `pt3/draw`, and
+anyone who opens `draw/?cloud` follows it read-only. This needs internet on both sides and the `pt3` rule from
+the main README (public read, admin write). Without sign-in nothing is sent anywhere, and the `?cloud` screen
+says so instead of pretending to be in sync. Note: **Committee tools → reset** in the scorer console clears
+everything under `pt3`, including the published copy; the organiser's device keeps its own copy and publishes it
+again at the next step.
 
 ## Results
 
@@ -96,5 +89,5 @@ NODE_PATH=$(npm root -g) node draw/tests/e2e.cjs
 ```
 
 The real pages in Chromium (needs Playwright and the local server above): a complete 12-pair draw driven from the
-control panel with the audience screen open, every button, refresh during a spin, exports, fullscreen,
-presentation mode, 4K, phone and reduced-motion layouts.
+control panel with the draw screen open, every button, refresh during a spin, exports, and the phone (upright,
+small, sideways), 4K and reduced-motion layouts.

@@ -35,7 +35,7 @@ export function initialState(now, prev) {
     phase: 'idle', paused: false, pausedAt: 0,
     pairs: PAIRS.slice(), remaining: PAIRS.map((_, i) => i), groups: { A: [], B: [] },
     current: null, history: [], wheelAngle: -0.35,
-    sound: prev ? prev.sound !== false : true, view: 'arena', startedAt: null, completedAt: null,
+    view: 'arena', startedAt: null, completedAt: null,
   };
 }
 const clone = (s) => JSON.parse(JSON.stringify(s));
@@ -141,7 +141,6 @@ export const actions = {
   },
 
   reset(s, now) { if (!can(s).reset) return null; return initialState(now, s); },
-  setSound(s, now, on) { const n = clone(s); n.sound = !!on; return n; },
   setView(s, now, view) { if (!can(s).view || !['arena', 'final'].includes(view)) return null; const n = clone(s); n.view = view; return n; },
 };
 

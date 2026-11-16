@@ -40,11 +40,9 @@
           <button class="btn danger" id="cReset" type="button">Reset draw</button>
         </div>
         <div class="row">
-          <button class="btn" id="cScreen" type="button">Fullscreen presentation</button>
-          <button class="btn" id="cSound" type="button">Sound on</button>
           <button class="btn" id="cView" type="button">View final results</button>
         </div>
-        <p class="note" style="margin-top:1rem">The gold button is the next step. <b>Space bar</b> presses it. Sound plays on the audience screen.</p>
+        <p class="note" style="margin-top:1rem">The gold button is the next step. Sound plays on the draw screen and is always on.</p>
       </section>
 
       <section class="panel">
@@ -76,8 +74,8 @@
 
       <section class="panel">
         <h2>Audience screen</h2>
-        <p class="note"><b>Projector or TV plugged into this laptop:</b> press <b>Fullscreen presentation</b>, drag the new window onto the big screen and click its <b>Fullscreen</b> button. It follows this panel instantly and needs no internet.</p>
-        <p class="note" style="margin-top:.8rem"><b>A different device</b> (smart TV, second laptop, phones): sign in below with a scorer account, then open this address on that device:<br><code id="cloudUrl"></code></p>
+        <p class="note"><b>Same phone or laptop:</b> the <a href="./" style="color:var(--gold)">draw screen</a> has its own buttons, so this panel is optional. Open in two tabs of the same browser they stay in step without internet.</p>
+        <p class="note" style="margin-top:.8rem"><b>Other devices</b> (a TV, everyone's phones): sign in below with a scorer account, then open this address on them:<br><code id="cloudUrl"></code></p>
         <form id="cloudForm" autocomplete="on">
           <input class="field" id="cEmail" type="email" placeholder="Scorer email" autocomplete="username" required>
           <input class="field" id="cPass" type="password" placeholder="Password" autocomplete="current-password" required>
