@@ -18,7 +18,7 @@ GitHub does not apply it: rules live in the Firebase console, so this file is th
 | `admins` | Nobody from the browser (rules still read it) | Nobody from the browser: add admins in the console |
 | `pt3` | Everyone (live scores, the live draw) | Signed-in accounts listed in `admins` |
 | `pt2` | Everyone (Edition 2.0 archive) | Admins |
-| `certLog` | Admins | Anyone, but only **new** entries in the exact shape the certificate page sends: name 3–60 characters, a real pair id, kind and format from a fixed list, server time. Entries cannot be edited or deleted from the browser |
+| `certLog` | Admins (the scorer console shows who downloaded an Edition 2.0 certificate) | Nobody, while e-certificates are closed. When Edition 3.0 certificates open, change `".write": false` back to `"!data.exists() && newData.exists()"` and update the `pair` and `kind` patterns to the Edition 3.0 values. The validation rules below it keep entries to the exact shape the certificate page sends |
 | `familyNight` | Nobody | Nobody. The family scoreboard pages were removed from the site; the old scores stay in the database (export or delete them in the console) |
 
 Anything not listed is closed, because Realtime Database rules deny by default.

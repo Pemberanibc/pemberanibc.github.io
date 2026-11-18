@@ -16,7 +16,7 @@ Both Edition 3.0 pages have an **EN / BM** switch at the top. The choice is reme
 | [`/live/`](https://pemberanibc.github.io/live/) | The Match Centre: live courts, latest results, match of the day, fixtures, standings with the qualification race, bracket and pairs. Share this on the day |
 | [`/score/`](https://pemberanibc.github.io/score/) | Umpires and committee: tap-to-score console (sign-in required) |
 | [`/draw/`](https://pemberanibc.github.io/draw/) | The live group draw, run from a phone. See `draw/README.md` |
-| [`/edition2/`](https://pemberanibc.github.io/edition2/) | Edition 2.0 site and [e-certificates](https://pemberanibc.github.io/edition2/cert.html), kept as an archive |
+| [`/edition2/`](https://pemberanibc.github.io/edition2/) | Edition 2.0 site, kept as an archive |
 
 Old links (`live.html`, `score.html`, `cert.html`) still work: `404.html` sends them to the new address.
 
@@ -29,6 +29,7 @@ live/                   Match Centre
 score/                  scorer console (sign-in)
 draw/                   live group draw (own README)
 edition2/               Edition 2.0 archive: its own pages, code, styles and assets
+edition2/cert.html      "e-certificates are closed" notice (old cert.html links land here)
 
 css/e3.css              Edition 3.0 styling
 css/score.css           scorer console styling
@@ -126,6 +127,19 @@ If Firebase can't be reached, the pages fall back to demo mode and show a yellow
 - Scroll animations use CSS `position: sticky` and one small scroll handler, with no animation library, so it stays smooth on cheaper phones.
 - Visitors with "Reduce Motion" switched on get gentle fades instead of movement, and the statement lines are shown one after another.
 - Any new text needs a BM version: add a `data-i18n` key in the HTML and the translation in `js/e3/i18n.js`.
+
+## E-certificates
+
+Closed until after Edition 3.0. `edition2/cert.html` (and the old `cert.html` link) shows a notice saying Edition 3.0
+certificates open after the tournament. The Edition 2.0 generator (page, script, PDF library, certificate backgrounds,
+script font) is in the git history: restore it with
+
+```bash
+git checkout 1b1eb86 -- edition2/cert.html edition2/js/cert.js edition2/js/vendor edition2/assets/cert edition2/assets/fonts
+```
+
+and use it as the starting point for the Edition 3.0 certificates (new backgrounds, pairs and kinds), then reopen
+writes to `certLog` in the Firebase rules (see `firebase/README.md`).
 
 ## Security
 
