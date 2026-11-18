@@ -304,7 +304,7 @@ function renderCertLog(log) {
     const kind = names[0]?.kind;
     return `<div class="cl-pair"><b>${esc(pair.name)}</b>${kind && kind !== 'participation' ? `<span class="cl-kind">${esc(kind)}</span>` : ''}
       ${names.length
-        ? names.map(p => `<div class="cl-name"><span>${esc(p.name)}</span><span>${[...p.formats].join(' · ')} · ${fmtTime(p.at)}</span></div>`).join('')
+        ? names.map(p => `<div class="cl-name"><span>${esc(p.name)}</span><span>${esc([...p.formats].join(' · '))} · ${esc(fmtTime(p.at))}</span></div>`).join('')
         : '<div class="cl-name none">No one yet</div>'}</div>`;
   }).join('');
   const pairsDone = new Set(list.map(p => p.pair)).size;

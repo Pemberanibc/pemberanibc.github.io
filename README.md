@@ -13,30 +13,35 @@ Both Edition 3.0 pages have an **EN / BM** switch at the top. The choice is reme
 | `index.html` | Everyone: the Edition 3.0 story (hero, statement, champions, format, players and pots, prizes) with a short "on court now" strip linking to the Match Centre |
 | `live.html` | The Match Centre: live courts, latest results, match of the day, fixtures, standings with the qualification race, bracket and pairs. Share this on the day |
 | `score.html` | Umpires and committee: tap-to-score console (sign-in required) |
-| `draw/` | The live group draw: audience screen (`draw/`) and organiser panel (`draw/control.html`). See `draw/README.md` |
-| `edition2/` | Edition 2.0 site and e-certificates, kept as an archive (`cert.html` in the root redirects there) |
-| `family-scoreboard.html` | Thursday Family Night live scoreboard (currently #2, Diwali Edition) |
-| `family-night-1.html` | Family Night #1 (8 Oct 2026), read-only archive |
+| `draw/` | The live group draw, run from a phone. See `draw/README.md` |
+| `edition2/` | Edition 2.0 site and e-certificates, kept as an archive (`cert.html` in the root redirects there for old links) |
 
 ## Files
 
 ```
-index.html            Edition 3.0 campaign page
-live.html             Edition 3.0 match centre
-score.html            scorer console
-css/e3.css            Edition 3.0 styling
-css/style.css         scorer console base styling
-js/config.js          ← dates, pairs, groups, rules, prizes, photos. Edit this one.
-js/e3/site.js         campaign page wiring
-js/e3/live.js         match centre, standings, bracket, pair cards (shared by both pages)
-js/e3/motion.js       scroll animations, nav, cursor, countdown
-js/e3/i18n.js         EN / BM text (static page text and live labels)
-js/logic.js           scoring rules, standings, bracket
-js/store.js           Firebase / demo data layer
-js/score.js           scorer console behaviour
-js/firebase-config.js Firebase web config
-assets/e3/            Edition 3.0 photos and the link-preview image (og.jpg)
+index.html              Edition 3.0 campaign page
+live.html               Edition 3.0 match centre
+score.html              scorer console (sign-in)
+cert.html               redirect to edition2/cert.html, so old certificate links keep working
+
+css/e3.css              Edition 3.0 styling
+css/score.css           scorer console styling
+js/config.js            ← dates, pairs, groups, rules, prizes, photos. Edit this one.
+js/e3/                  campaign page, match centre, animations, EN / BM text
+js/logic.js             scoring rules, standings, bracket
+js/store.js             Firebase / demo data layer
+js/score.js             scorer console behaviour
+js/firebase-config.js   Firebase web config (public by design, see Security)
+assets/                 crest.png and icon.png (shared by every page)
+assets/e3/              Edition 3.0 photos and the link-preview image (og.jpg)
+
+draw/                   live group draw (own README)
+edition2/               Edition 2.0 archive: its own pages, code, styles and assets/
+firebase/               recommended database security rules (own README)
+tools/draw-film/        how the group-draw video was made; not part of the website (own README)
 ```
+
+Everything in this repository is published by GitHub Pages, including `tools/`. Keep anything private out of it.
 
 ## Try it without Firebase
 
@@ -92,20 +97,12 @@ The pots are only used to draw the pairs. The tournament groups (A and B, six pa
    Example: `export const PHOTOS = ['hero', 'champions-e2'];` and `export const GALLERY_COUNT = 9;`
    Phone photos are fine. Keep each under about 500 KB (long side about 2000 px). The site greys and darkens them to fit the look.
 
-## Firebase: one change needed for Edition 3.0
+## Firebase
 
-Edition 3.0 stores scores under `/pt3`, so Edition 2.0 results under `/pt2` stay untouched.
-In the [Firebase console](https://console.firebase.google.com/project/pemberani-badminton) go to
-**Realtime Database → Rules** and add a `pt3` block next to the existing `pt2` block, with the same rules:
-
-```json
-"pt3": {
-  ".read": true,
-  ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
-}
-```
-
-Click **Publish**. Scorer accounts and the `admins` list from Edition 2.0 keep working.
+Edition 3.0 stores scores and the live draw under `/pt3`; Edition 2.0 results under `/pt2` stay untouched.
+The database rules this site needs are in [`firebase/database.rules.json`](firebase/database.rules.json), with
+instructions in [`firebase/README.md`](firebase/README.md). They are applied in the Firebase console, not from GitHub.
+Scorer accounts and the `admins` list from Edition 2.0 keep working.
 
 If Firebase can't be reached, the pages fall back to demo mode and show a yellow "Demo" badge, so a broken connection is visible.
 
@@ -125,12 +122,23 @@ If Firebase can't be reached, the pages fall back to demo mode and show a yellow
 - Visitors with "Reduce Motion" switched on get gentle fades instead of movement, and the statement lines are shown one after another.
 - Any new text needs a BM version: add a `data-i18n` key in the HTML and the translation in `js/e3/i18n.js`.
 
-## Thursday Family Night
+## Security
 
-`family-scoreboard.html` is the link that gets shared, so it always holds the latest night.
-When a night is over, copy it to `family-night-N.html`, make the inputs read-only, and build the next one in its place.
+The site is public and has no server of its own, so its safety rests on the Firebase settings. Checklist:
 
-- **Night #2 · Diwali (5 Nov 2026):** 15 rounds = every possible 2-vs-2 match-up of the 5 players exactly once.
-  Three sets of five; each player sits out once per set and never twice in a row. After round 10 every pair has
-  partnered twice (a fair place to stop); after round 15, three times. Scores are stored under
-  `familyNight/scores/n2r0` … `n2r14`. Night #1 used `r0` … `r9` in the same node, so no rule changes are needed.
+- **Database rules.** Publish the rules in `firebase/` (see its README). Public visitors can read scores; only admins
+  can change them; the certificate log only accepts well-formed new entries; the old family-night scores are closed.
+- **Firebase web config is not a secret.** `js/firebase-config.js` has to be in the page for the site to work. Access
+  is controlled by the rules above. To stop the key being reused elsewhere, restrict it in
+  [Google Cloud → APIs & Services → Credentials](https://console.cloud.google.com/apis/credentials?project=pemberani-badminton):
+  *Website restrictions* → `pemberanibc.github.io/*` (add `localhost` while testing).
+- **Scorer accounts.** In Firebase → **Authentication → Settings**: turn off *User actions → Enable create (sign-up)*
+  so nobody can make their own account (the committee adds scorers under **Users**), keep *Email enumeration protection*
+  on, and remove unused entries under *Authorized domains*. Delete scorer accounts nobody uses any more, and remove
+  their uid from `admins`.
+- **GitHub.** Turn on two-factor authentication for every account with write access. In the repository settings:
+  *Pages → Enforce HTTPS*; *Code security → Secret scanning* and *Push protection*; and a branch rule on `main`
+  that requires a pull request, so nothing reaches the live site by accident.
+- **Never commit** passwords, admin emails, phone numbers or private photos: everything here is public, and removing a
+  file later does not remove it from the git history.
+
