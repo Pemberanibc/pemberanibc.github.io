@@ -29,6 +29,11 @@
       }
     },
 
+    "tournament": {
+      ".read": true,
+      ".write": false
+    },
+
     "familyNight": {
       ".read": false,
       ".write": false

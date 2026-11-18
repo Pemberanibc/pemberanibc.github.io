@@ -17,6 +17,7 @@ Both Edition 3.0 pages have an **EN / BM** switch at the top. The choice is reme
 | [`/score/`](https://pemberanibc.github.io/score/) | Umpires and committee: tap-to-score console (sign-in required) |
 | [`/draw/`](https://pemberanibc.github.io/draw/) | The live group draw, run from a phone. See `draw/README.md` |
 | [`/edition2/`](https://pemberanibc.github.io/edition2/) | Edition 2.0 site, kept as an archive |
+| [`/edition1/`](https://pemberanibc.github.io/edition1/) | Edition 1.0, the first tournament site, kept as a read-only archive |
 
 Old links (`live.html`, `score.html`, `cert.html`) still work: `404.html` sends them to the new address.
 
@@ -29,6 +30,7 @@ live/                   Match Centre
 score/                  scorer console (sign-in)
 draw/                   live group draw (own README)
 edition2/               Edition 2.0 archive: its own pages, code, styles and assets
+edition1/               Edition 1.0 archive: one page, reads the saved results, never writes
 edition2/cert.html      "e-certificates are closed" notice (old cert.html links land here)
 
 css/e3.css              Edition 3.0 styling

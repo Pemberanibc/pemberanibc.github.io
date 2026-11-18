@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pemberani Tournament 1.0 · Archive</title>
+  <meta name="description" content="Pemberani Badminton Tournament, Edition 1.0: results, standings and brackets. Where it all started.">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta property="og:title" content="Pemberani Tournament 1.0 · Archive">
+  <meta property="og:description" content="Where it all started. Results, standings and brackets from the first Pemberani tournament.">
+  <meta property="og:image" content="https://pemberanibc.github.io/assets/e3/champions-e1.jpg">
+  <link rel="icon" href="../assets/icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="../assets/icon.png">
+  <style>
+    :root {
+      --gold-primary: #D4AF37;
+      --gold-light: #F3E5AB;
+      --gold-dark: #AA8C2C;
+      --bg-main: #0a0a0a;
+      --bg-card: #151515;
+      --bg-card-border: #2a2a2a;
+      --text-main: #e0e0e0;
+      --text-muted: #888888;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: var(--bg-main);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 1.5rem 1rem 5.5rem;
+      background-image: radial-gradient(circle at top, #1a1a1a 0%, #0a0a0a 100%);
+    }
+
+    /* ---------- LAYOUT & TYPOGRAPHY ---------- */
+    .app { max-width: 900px; margin: 0 auto; position: relative; z-index: 2; }
+    .header-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 0.5rem; }
+    .main-logo { width: 140px; height: auto; margin-bottom: 1rem; filter: drop-shadow(0 4px 15px rgba(212, 175, 55, 0.4)); }
+
+    h1 {
+      font-size: 2.4rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+      background: linear-gradient(to bottom, #FFF, var(--gold-primary));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center;
+      margin-bottom: 0.2rem; line-height: 1.1;
+    }
+    .subhead {
+      color: var(--gold-light); text-align: center; text-transform: uppercase; letter-spacing: 2px;
+      font-size: 0.85rem; font-weight: 600; margin-bottom: 2rem; border-bottom: 1px solid var(--bg-card-border); padding-bottom: 1rem;
+    }
+
+    /* ---------- TABS ---------- */
+    .tabs {
+      display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; background: var(--bg-card);
+      padding: 0.5rem; border-radius: 8px; border: 1px solid var(--bg-card-border);
+    }
+    .tab-btn {
+      flex: 1 0 auto; background: transparent; border: 1px solid transparent; padding: 0.6rem 1rem;
+      border-radius: 4px; font-weight: 600; font-size: 0.9rem; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; cursor: pointer;
+    }
+    .tab-btn.active { background: rgba(212, 175, 55, 0.1); color: var(--gold-primary); border-color: var(--gold-primary); }
+    .tab-content { display: none; animation: fadeIn 0.3s ease; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ---------- CARDS & BUTTONS ---------- */
+    .card { background: var(--bg-card); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.2rem; border: 1px solid var(--bg-card-border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .card-title { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gold-primary); margin-bottom: 1.2rem; font-weight: 700; border-left: 4px solid var(--gold-primary); padding-left: 0.8rem; display: flex; justify-content: space-between; align-items: center;}
+    
+    .btn { background: #1a1a1a; border: 1px solid var(--gold-dark); color: var(--gold-primary); padding: 0.6rem 1.4rem; border-radius: 4px; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.2s; text-align: center; }
+    .btn:hover { background: var(--gold-primary); color: #000; }
+
+    /* ---------- COURTS ---------- */
+
+    /* ----- STANDINGS TABLE ----- */
+    .standings-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .standings-table th { text-align: left; color: var(--gold-light); font-weight: 600; padding: 0.8rem 0.4rem; border-bottom: 2px solid var(--gold-dark); text-transform: uppercase; }
+    .standings-table td { padding: 0.8rem 0.4rem; border-bottom: 1px solid var(--bg-card-border); }
+    .standings-table tr.qualified td { background: rgba(212, 175, 55, 0.05); }
+    .rank-badge { display: inline-block; width: 26px; height: 26px; background: #333; border-radius: 50%; text-align: center; line-height: 26px; font-weight: 700; font-size: 0.8rem; }
+    .rank-1 { background: var(--gold-primary); color: #000; }
+    .rank-2 { background: #C0C0C0; color: #000; } 
+    .rank-3 { background: #CD7F32; color: #000; } 
+
+    /* ----- FIXTURES ----- */
+    .fixture-category { font-size: 1.2rem; color: var(--gold-light); margin: 1.5rem 0 0.8rem; padding-bottom: 0.3rem; border-bottom: 1px solid #333; text-transform: uppercase; letter-spacing: 1px; }
+    .fixture-item { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem; border-bottom: 1px solid var(--bg-card-border); background: rgba(26,26,26,0.5); margin-bottom: 0.5rem; border-radius: 4px; }
+    .fixture-status { font-size: 0.75rem; background: #333; padding: 0.2rem 0.6rem; border-radius: 4px; color: #ccc; text-transform: uppercase; font-weight: bold; }
+    .fixture-status.completed { background: var(--gold-dark); color: #fff; }
+    .fixture-status.court1 { border-left: 3px solid #4facfe; }
+    .fixture-status.court2 { border-left: 3px solid #f5576c; }
+
+    /* ----- BRACKETS PAGE WRAPPERS ----- */
+    .bracket-wrapper { padding: 2rem 1rem; overflow-x: auto; background: #0a0a0a; border-radius: 8px; border: 1px solid #222; margin-bottom: 2rem;}
+    
+    /* 1. LEAGUE BRACKET (Cross-Table Grid) */
+    .league-matrix { width: 100%; border-collapse: collapse; min-width: 600px; text-align: center; font-size: 0.85rem; }
+    .league-matrix th { background: #151515; color: var(--gold-light); padding: 0.8rem; border: 1px solid var(--gold-dark); text-transform: uppercase; font-size: 0.75rem; }
+    .league-matrix td { padding: 0.8rem; border: 1px solid #333; background: #0d0d0d; }
+    .league-matrix td.self-cell { background: repeating-linear-gradient(45deg, #111, #111 10px, #1a1a1a 10px, #1a1a1a 20px); border: 1px solid #222; }
+    .league-matrix td.completed-cell { background: rgba(212, 175, 55, 0.1); font-weight: bold; }
+    .result-w { color: var(--gold-primary); }
+    .result-l { color: #888; }
+    .result-tbp { color: #555; font-size: 0.75rem; text-transform: uppercase; }
+
+    /* 2. CHAMPIONSHIP BRACKET (Exact CSS Tree) */
+    .champ-container {
+      display: flex; align-items: flex-start; justify-content: center; min-width: 600px;
+    }
+    .champ-sf-col { display: flex; flex-direction: column; gap: 40px; }
+    
+    .champ-match {
+      width: 220px; height: 110px; border: 1px solid var(--gold-dark); border-radius: 4px;
+      padding: 10px; background: #111; text-align: center; display: flex; flex-direction: column; justify-content: center;
+      box-sizing: border-box; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 2; position: relative;
+    }
+    .champ-match-title { font-size: 0.7rem; color: var(--gold-primary); border-bottom: 1px solid #333; padding-bottom: 4px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;}
+    .champ-team { font-size: 0.85rem; font-weight: bold; padding: 2px 0; }
+    .champ-team.winner { color: var(--gold-primary); text-shadow: 0 0 5px rgba(212,175,55,0.3); font-weight: 900;}
+    .champ-vs { font-size: 0.65rem; color: #666; margin: 2px 0; }
+    
+    /* Connecting Lines wrapper */
+    .champ-connector-col { width: 30px; position: relative; height: 260px; }
+    .champ-final-col { display: flex; flex-direction: column; }
+    
+    /* Bronze Match Specific */
+    .bronze-match { border-color: #CD7F32; }
+    .bronze-match .champ-match-title { color: #CD7F32; border-bottom-color: #5a3816;}
+    
+    /* ----- CERTIFICATES ----- */
+    .text-center { text-align: center; }
+
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      .tabs, .subhead, .btn, .btn-hard-reset { display: none !important; }
+      .card { box-shadow: none; border: none; background: #fff; padding: 0; }
+      .bracket-wrapper, .league-matrix td, .champ-match { background: #fff !important; border-color: #000 !important; color: #000 !important;}
+      .champ-match-title, .league-matrix th { color: #000 !important; }
+    }
+  
+    /* ----- ARCHIVE ADDITIONS ----- */
+    .text-gold { color: var(--gold-primary); }
+    .archive-tag { display: inline-block; margin-bottom: 0.9rem; padding: 0.25rem 0.8rem; border: 1px solid var(--gold-dark); border-radius: 999px; color: var(--gold-light); font-size: 0.72rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
+    .champ-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 0; overflow: hidden; padding: 0; }
+    .champ-hero img { width: 100%; height: 320px; object-fit: cover; object-position: 50% 70%; display: block; filter: grayscale(.25) contrast(1.05); }
+    .champ-hero .txt { padding: 1.6rem 1.5rem; display: flex; flex-direction: column; justify-content: center; gap: 0.4rem; }
+    .champ-hero .k { color: var(--gold-light); font-size: 0.75rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
+    .champ-hero .n { font-size: 2rem; font-weight: 800; line-height: 1.1; color: #fff; }
+    .champ-hero .s { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+    @media (max-width: 600px) { .champ-hero { grid-template-columns: 1fr; } .champ-hero img { height: auto; aspect-ratio: 4 / 3; } }
+    .status-note { color: var(--text-muted); font-size: 0.85rem; text-align: center; margin: -1rem 0 1.5rem; }
+    .archive-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; background: #FFC61A; color: #050505; text-align: center; font: 600 13px/1.4 -apple-system, "Segoe UI", sans-serif; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+    .archive-bar a { color: #050505; font-weight: 800; }
+    .foot { text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: 2rem; line-height: 1.8; }
+    .foot a { color: var(--gold-primary); text-decoration: none; margin: 0 0.4rem; }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <div class="header-container">
+    <img src="../assets/crest.png" alt="Pemberani Badminton Club crest" class="main-logo" width="459" height="640">
+    <span class="archive-tag">Archive · Edition 1.0</span>
+    <h1>Pemberani Badminton Tournament</h1>
+  </div>
+  <div class="subhead">Play with Courage. Win with Pride.</div>
+
+  <div class="card champ-hero">
+    <img src="../assets/e3/champions-e1.jpg" alt="Edition 1.0 champions Jai and Rasheed" loading="lazy">
+    <div class="txt">
+      <span class="k">Edition 1.0 Champions</span>
+      <span class="n">Jai &amp; Rasheed</span>
+      <span class="s">The first Pemberani tournament: nine pairs, two groups, and the start of everything that followed.</span>
+    </div>
+  </div>
+
+  <p class="status-note" id="statusNote">Loading the Edition 1.0 results…</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="tabFixtures">Results</button>
+    <button class="tab-btn" data-tab="tabStandings">Standings</button>
+    <button class="tab-btn" data-tab="tabKnockout">Brackets</button>
+  </div>
+
+  <div id="tabFixtures" class="tab-content active">
+    <div class="card">
+      <div class="card-title">Results</div>
+      <div id="fixtureList"></div>
+    </div>
+  </div>
+
+  <div id="tabStandings" class="tab-content">
+    <div class="card"><div class="card-title">Group A</div><div id="standingsA"></div></div>
+    <div class="card"><div class="card-title">Group B</div><div id="standingsB"></div></div>
+  </div>
+
+  <div id="tabKnockout" class="tab-content">
+    <div class="card">
+      <div class="card-title">League Bracket (Group Phase)</div>
+      <div class="bracket-wrapper" id="leagueBracketContainer"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Championship Bracket</div>
+      <div class="bracket-wrapper"><div id="championshipBracketContainer"></div></div>
+    </div>
+  </div>
+
+  <p class="foot">© Pemberani Badminton Club · Tournament Edition 1.0<br>
+    <a href="../edition2/">Edition 2.0</a>·<a href="../">Edition 3.0 →</a></p>
+</div>
+
+<div class="archive-bar">Archive · Edition 1.0 &nbsp;·&nbsp; <a href="../">Edition 3.0 is here →</a></div>
+
+<script type="module">
+  let matches = [];
+  const PAIRS = [
+    { id: 6, name: 'Taufik & Haziq', group: 'A' },
+    { id: 4, name: 'Bangmie & Syaqir', group: 'A' },
+    { id: 3, name: 'Herman & Syahir', group: 'A' },
+    { id: 9, name: 'Daus & Sepul', group: 'A' },
+    { id: 5, name: 'Fareez & Nizam', group: 'A' },
+    { id: 1, name: 'Jai & Rasheed', group: 'B' },
+    { id: 2, name: 'Fauzi & Pok', group: 'B' },
+    { id: 7, name: 'Aizat & Awie', group: 'B' },
+    { id: 8, name: 'Sapik & Poknik', group: 'B' }
+  ];
+
+  function buildMatches() {
+    const matches = [];
+    const groups = { A: PAIRS.filter(p => p.group === 'A'), B: PAIRS.filter(p => p.group === 'B') };
+    
+    for (const g of ['A', 'B']) {
+      const arr = groups[g];
+      for (let i = 0; i < arr.length; i++) {
+        for (let j = i+1; j < arr.length; j++) {
+          matches.push({
+            id: `g-${arr[i].id}-${arr[j].id}`, pair1: arr[i].id, pair2: arr[j].id,
+            group: g, round: 'group', set1: null, set2: null, winner: null, status: 'upcoming', 
+          });
+        }
+      }
+    }
+    
+    const koIds = ['sf1', 'sf2', 'third', 'final'];
+    const koLabels = ['Semi-Final 1', 'Semi-Final 2', 'Bronze Match', 'Grand Final'];
+    for (let i = 0; i < 4; i++) {
+      matches.push({
+        id: `ko-${koIds[i]}`, pair1: null, pair2: null, group: null, round: 'knockout',
+        label: koLabels[i], set1: null, set2: null, winner: null, status: 'upcoming'
+      });
+    }
+    return matches;
+  }
+
+  function getPair(id) { return PAIRS.find(p => p.id === id); }
+  function getMatch(id) { return matches.find(m => m.id === id); }
+  function getMatchBetween(id1, id2) { return matches.find(m => (m.pair1 === id1 && m.pair2 === id2) || (m.pair1 === id2 && m.pair2 === id1)); }
+
+  // --- STANDINGS ---
+  function computeStandings(group) {
+    const pairs = PAIRS.filter(p => p.group === group);
+    const stats = pairs.map(p => ({ ...p, played: 0, wins: 0, losses: 0, pf: 0, pa: 0, diff: 0, points: 0 }));
+    const groupMatches = matches.filter(m => m.group === group && m.status === 'completed' && m.winner);
+    for (const m of groupMatches) {
+      const p1 = stats.find(s => s.id === m.pair1); const p2 = stats.find(s => s.id === m.pair2);
+      if (!p1 || !p2) continue;
+      const totalP1 = (m.set1?.p1 || 0) + (m.set2?.p1 || 0);
+      const totalP2 = (m.set1?.p2 || 0) + (m.set2?.p2 || 0);
+      p1.played++; p2.played++;
+      p1.pf += totalP1; p1.pa += totalP2; p2.pf += totalP2; p2.pa += totalP1;
+      if (m.winner === p1.id) { p1.wins++; p2.losses++; p1.points += 2; }
+      else if (m.winner === p2.id) { p2.wins++; p1.losses++; p2.points += 2; }
+    }
+    stats.forEach(s => { s.diff = s.pf - s.pa; });
+    stats.sort((a,b) => b.points - a.points || b.diff - a.diff || b.pf - a.pf);
+    return stats;
+  }
+
+  // --- RENDER VIEWS ---
+  function renderStandings() {
+    ['A', 'B'].forEach(group => {
+      const stats = computeStandings(group);
+      let html = `<table class="standings-table"><thead><tr><th>#</th><th>Team</th><th>P</th><th>W</th><th>L</th><th>Diff</th><th>Pts</th></tr></thead><tbody>`;
+      stats.forEach((s, idx) => {
+        const rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : '';
+        html += `<tr><td><span class="rank-badge ${rankClass}">${idx+1}</span></td><td><strong>${s.name}</strong></td><td>${s.played}</td><td>${s.wins}</td><td>${s.losses}</td><td>${s.diff > 0 ? '+'+s.diff : s.diff}</td><td><strong class="text-gold">${s.points}</strong></td></tr>`;
+      });
+      html += '</tbody></table>';
+      document.getElementById(`standings${group}`).innerHTML = html;
+    });
+  }
+
+  function renderFixtures() {
+    const container = document.getElementById('fixtureList');
+    let html = '';
+    const renderSection = (title, matchArray) => {
+      if(matchArray.length === 0) return '';
+      let sectionHtml = `<div class="fixture-category">${title}</div>`;
+      matchArray.forEach(m => {
+        const label = esc(m.label || `Group ${m.group}`);
+        const statusText = m.status === 'completed' ? 'COMPLETED' : 'NOT PLAYED';
+        const n = (v) => Number(v) || 0;
+        let setText = m.set1 ? `<br><span style="font-size:0.8rem; color:#888;">S1: ${n(m.set1.p1)}-${n(m.set1.p2)} | S2: ${n(m.set2?.p1)}-${n(m.set2?.p2)}</span>` : '';
+        let winnerName = m.winner ? ` <span class="text-gold">(Winner: ${getPair(m.winner)?.name})</span>` : '';
+        let team1Display = getPair(m.pair1)?.name || 'TBD';
+        let team2Display = getPair(m.pair2)?.name || 'TBD';
+
+        const resetBtnHtml = '';
+
+        sectionHtml += `<div class="fixture-item">
+          <div style="flex: 1;"><div style="font-size:0.75rem; color:var(--gold-dark);">${label}</div><strong style="${m.winner === m.pair1 ? 'color:var(--gold-primary)' : ''}">${team1Display}</strong> <span style="color:#666; font-size:0.8rem; margin:0 5px;">vs</span> <strong style="${m.winner === m.pair2 ? 'color:var(--gold-primary)' : ''}">${team2Display}</strong>${setText} ${winnerName}</div>
+          <div style="display:flex; align-items:center;"><span class="fixture-status ${m.status === 'completed' ? 'completed' : ''}">${statusText}</span>${resetBtnHtml}</div></div>`;
+      });
+      return sectionHtml;
+    };
+
+    html += renderSection("Group A Matches", matches.filter(m => m.group === 'A'));
+    html += renderSection("Group B Matches", matches.filter(m => m.group === 'B'));
+    html += renderSection("Knockout Stage", matches.filter(m => m.round === 'knockout'));
+    container.innerHTML = html;
+  }
+
+  function renderBrackets() {
+    const leagueContainer = document.getElementById('leagueBracketContainer');
+    let leagueHtml = '';
+    
+    ['A', 'B'].forEach(g => {
+      const groupPairs = PAIRS.filter(p => p.group === g);
+      leagueHtml += `<h3 style="color:var(--gold-primary); margin: 1rem 0 0.5rem; text-transform:uppercase; font-size:1rem;">Group ${g} Matrix</h3>`;
+      leagueHtml += `<table class="league-matrix"><thead><tr><th>Group ${g}</th>`;
+      groupPairs.forEach(p => { leagueHtml += `<th>${p.name}</th>`; });
+      leagueHtml += `</tr></thead><tbody>`;
+      
+      groupPairs.forEach(rowPair => {
+        leagueHtml += `<tr><th>${rowPair.name}</th>`;
+        groupPairs.forEach(colPair => {
+          if (rowPair.id === colPair.id) {
+            leagueHtml += `<td class="self-cell"></td>`;
+          } else {
+            const m = getMatchBetween(rowPair.id, colPair.id);
+            if (!m) { leagueHtml += `<td>-</td>`; }
+            else if (m.status === 'completed') {
+              const isWin = m.winner === rowPair.id;
+              const resClass = isWin ? 'result-w' : 'result-l';
+              const text = isWin ? 'W' : 'L';
+              leagueHtml += `<td class="completed-cell"><span class="${resClass}">${text}</span></td>`;
+            } else {
+              leagueHtml += `<td><span class="result-tbp">TBP</span></td>`;
+            }
+          }
+        });
+        leagueHtml += `</tr>`;
+      });
+      leagueHtml += `</tbody></table>`;
+    });
+    leagueContainer.innerHTML = leagueHtml;
+
+    const champContainer = document.getElementById('championshipBracketContainer');
+    const sf1 = getMatch('ko-sf1');
+    const sf2 = getMatch('ko-sf2');
+    const finalMatch = getMatch('ko-final');
+    const thirdMatch = getMatch('ko-third');
+
+    const renderNode = (m, extraClass = '') => {
+      if (!m) return '';
+      const p1 = m.pair1 ? getPair(m.pair1) : null;
+      const p2 = m.pair2 ? getPair(m.pair2) : null;
+      return `
+        <div class="champ-match ${extraClass}">
+          <div class="champ-match-title">${esc(m.label)}</div>
+          <div class="champ-team ${m.winner === m.pair1 && m.winner ? 'winner' : ''}">${p1 ? p1.name : 'TBD'}</div>
+          <div class="champ-vs">vs</div>
+          <div class="champ-team ${m.winner === m.pair2 && m.winner ? 'winner' : ''}">${p2 ? p2.name : 'TBD'}</div>
+        </div>
+      `;
+    };
+
+    champContainer.innerHTML = `
+      <div class="champ-container">
+        <div class="champ-sf-col">
+          ${renderNode(sf1)}
+          ${renderNode(sf2)}
+        </div>
+        
+        <div class="champ-connector-col">
+          <div style="position:absolute; top: 55px; left:0; width: 15px; border-top: 2px solid var(--gold-dark);"></div>
+          <div style="position:absolute; top: 205px; left:0; width: 15px; border-top: 2px solid var(--gold-dark);"></div>
+          <div style="position:absolute; top: 55px; left: 15px; height: 150px; border-left: 2px solid var(--gold-dark);"></div>
+          <div style="position:absolute; top: 130px; left: 15px; width: 15px; border-top: 2px solid var(--gold-dark);"></div>
+        </div>
+        
+        <div class="champ-final-col">
+          <div style="margin-top: 75px;">${renderNode(finalMatch)}</div>
+          <div style="margin-top: 40px;">${renderNode(thirdMatch, 'bronze-match')}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  // --- INIT & TAB NAVIGATION ---
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+    renderAll();
+  }
+
+  function renderAll() {
+    renderStandings();
+    renderFixtures();
+    renderBrackets();
+  }
+
+  document.querySelectorAll('.tab-btn').forEach(btn => { btn.addEventListener('click', () => switchTab(btn.dataset.tab)); });
+
+  // --- READ-ONLY ARCHIVE ---
+  // The Edition 1.0 results are read once from the database where they were saved on the day.
+  // This page never writes anything.
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const PATH = 'tournament/pemberaniStateV4';
+  async function loadArchive() {
+    matches = buildMatches();
+    const note = document.getElementById('statusNote');
+    try {
+      const { firebaseConfig } = await import('../js/firebase-config.js');
+      const [{ initializeApp }, { getDatabase, ref, get }] = await Promise.all([
+        import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
+        import('https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js'),
+      ]);
+      const snap = await get(ref(getDatabase(initializeApp(firebaseConfig, 'edition1')), PATH));
+      const data = snap.val();
+      if (data && Array.isArray(data.matches)) {
+        matches = data.matches;
+        note.textContent = `Final results · ${matches.filter((m) => m.status === 'completed').length} matches played`;
+      } else note.textContent = 'The saved results could not be found. Showing the Edition 1.0 line-up and fixtures.';
+    } catch (e) {
+      console.warn('Edition 1.0 results unavailable', e);
+      note.textContent = 'The saved results could not be loaded right now. Showing the Edition 1.0 line-up and fixtures.';
+    }
+    renderAll();
+  }
+
+  loadArchive();
+</script>
+</body>
+</html>
