@@ -8,24 +8,24 @@
   <meta name="theme-color" content="#050505">
   <meta property="og:title" content="Match Centre · Pemberani 3.0">
   <meta property="og:description" content="Live scores, fixtures, standings and bracket. Sat 05.12.2026 · Andalas Sports Complex.">
-  <meta property="og:image" content="https://rasheedali78624.github.io/Pemberani/assets/e3/og.jpg">
-  <meta property="og:url" content="https://rasheedali78624.github.io/Pemberani/live.html">
+  <meta property="og:image" content="https://pemberanibc.github.io/assets/e3/og.jpg">
+  <meta property="og:url" content="https://pemberanibc.github.io/live/">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="assets/icon.png" type="image/png">
-  <link rel="apple-touch-icon" href="assets/icon.png">
+  <link rel="icon" href="../assets/icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="../assets/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/e3.css">
+  <link rel="stylesheet" href="../css/e3.css">
 </head>
 <body class="live-page">
 <div class="progress" aria-hidden="true"><i></i></div>
 
 <header class="nav solid">
   <div class="wrap">
-    <a class="brand" href="index.html"><img src="assets/icon.png" alt=""><span class="bt">Pemberani <em>3.0</em></span></a>
+    <a class="brand" href="../"><img src="../assets/icon.png" alt=""><span class="bt">Pemberani <em>3.0</em></span></a>
     <nav class="nav-links" aria-label="Sections">
-      <a href="#courts-sec" data-i18n="nav.courts">Courts</a><a href="#highlights-sec" data-i18n="nav.hl">Highlights</a><a href="#fixtures-sec" data-i18n="nav.fixtures">Fixtures</a><a href="#standings-sec" data-i18n="nav.standings">Standings</a><a href="#bracket-sec" data-i18n="nav.bracket">Bracket</a><a href="#players" data-i18n="nav.pairs">Pairs</a><a href="index.html" data-i18n="nav.campaign">The Campaign</a>
+      <a href="#courts-sec" data-i18n="nav.courts">Courts</a><a href="#highlights-sec" data-i18n="nav.hl">Highlights</a><a href="#fixtures-sec" data-i18n="nav.fixtures">Fixtures</a><a href="#standings-sec" data-i18n="nav.standings">Standings</a><a href="#bracket-sec" data-i18n="nav.bracket">Bracket</a><a href="#players" data-i18n="nav.pairs">Pairs</a><a href="../" data-i18n="nav.campaign">The Campaign</a>
     </nav>
     <span class="tag live live-pill">Live</span>
     <div class="lang" role="group" aria-label="Language">
@@ -41,7 +41,7 @@
   <a href="#standings-sec"><span class="ln"><span style="--i:2" data-i18n="nav.standings">Standings</span></span></a>
   <a href="#bracket-sec"><span class="ln"><span style="--i:3" data-i18n="nav.bracket">Bracket</span></span></a>
   <a href="#players"><span class="ln"><span style="--i:4" data-i18n="nav.pairs">Pairs</span></span></a>
-  <a href="index.html"><span class="ln"><span style="--i:5" data-i18n="nav.campaign">The Campaign</span></span></a>
+  <a href="../"><span class="ln"><span style="--i:5" data-i18n="nav.campaign">The Campaign</span></span></a>
 </div>
 
 <main>
@@ -127,7 +127,7 @@
 <footer class="foot">
   <div class="wrap">
     <span>© 2026 Pemberani Badminton Club</span>
-    <nav><a href="index.html" data-i18n="nav.campaign">The campaign</a><a href="edition2/index.html" data-i18n="ft.e2">Edition 2.0</a><a href="score.html" data-i18n="ft.score">Scorers</a></nav>
+    <nav><a href="../" data-i18n="nav.campaign">The campaign</a><a href="../edition2/" data-i18n="ft.e2">Edition 2.0</a><a href="../score/" data-i18n="ft.score">Scorers</a></nav>
   </div>
 </footer>
 <button class="to-top" aria-label="Back to top">
@@ -136,9 +136,9 @@
 </button>
 
 <script type="module">
-  import { wireNav, startScroll, dragScroll } from './js/e3/motion.js';
-  import { mountLive } from './js/e3/live.js';
-  import { wireLang } from './js/e3/i18n.js';
+  import { wireNav, startScroll, dragScroll } from '../js/e3/motion.js';
+  import { mountLive } from '../js/e3/live.js';
+  import { wireLang } from '../js/e3/i18n.js';
   wireLang();
   const navScroll = wireNav();
   startScroll({ onScroll: (y, dy) => navScroll?.(y, dy) });

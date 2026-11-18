@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found · Pemberani Tournament</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/icon.png" type="image/png">
+<script>
+  // Pages that moved. Old links shared in WhatsApp keep working.
+  (function () {
+    var moved = { '/live.html': '/live/', '/score.html': '/score/', '/cert.html': '/edition2/cert.html' };
+    var to = moved[location.pathname.replace(/\/+$/, '')];
+    if (to) location.replace(to + location.search + location.hash);
+  })();
+</script>
+<style>
+  html, body { margin: 0; height: 100%; background: #050505; color: #fff; font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+  main { min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 24px; box-sizing: border-box; text-align: center; }
+  img { width: 96px; height: auto; }
+  h1 { margin: 0; font-size: 28px; letter-spacing: .04em; text-transform: uppercase; }
+  p { margin: 0; color: #888; }
+  nav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 6px; }
+  a { color: #050505; background: #FFC61A; padding: 10px 16px; text-decoration: none; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; font-size: 13px; }
+  a.alt { background: transparent; color: #FFC61A; border: 1px solid #C8A24A; }
+</style>
+</head>
+<body>
+<main>
+  <img src="/assets/crest.png" alt="Pemberani Badminton Club crest">
+  <h1>Page not found</h1>
+  <p>This page doesn't exist. Try one of these.</p>
+  <nav><a href="/">Home</a><a class="alt" href="/live/">Match Centre</a><a class="alt" href="/draw/">Live draw</a></nav>
+</main>
+</body>
+</html>
