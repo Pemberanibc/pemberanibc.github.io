@@ -9,7 +9,7 @@ GitHub does not apply it: rules live in the Firebase console, so this file is th
 2. Copy what is there now into a text file as a backup.
 3. **If the project holds data for anything other than this site** (for example the old jersey tracker), keep those
    blocks and add the blocks below beside them. Pasting this whole file removes access to any node it does not list.
-4. Click **Publish**, then open `score.html`, sign in, and check that scoring and the certificate log still work.
+4. Click **Publish**, then open `/score/`, sign in, and check that scoring and the certificate log still work.
 
 ## What each block does
 

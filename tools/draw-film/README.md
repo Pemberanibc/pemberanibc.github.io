@@ -13,8 +13,7 @@ film/     index.html, film.js, timeline.js, fonts/, crest.png   deterministic Ca
 render/   render.js           headless Chromium -> PNG frames -> FFmpeg (H.264)
           audio.js            original soundtrack + sound design, synthesised from code
           verify-video.js     blind check that the MP4 shows exactly draw.json
-out/      pemberani-e3-group-draw.mp4          with soundtrack
-          pemberani-e3-group-draw-silent.mp4   same video stream, audio removed
+out/      rendered videos go here (not kept in the repository; re-render with the steps below)
 ```
 
 ## How the draw works

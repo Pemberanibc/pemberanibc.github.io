@@ -1,9 +1,9 @@
 // Edition 3.0 live data: match centre, fixtures, standings, bracket,
-// pair cards and pair profiles. Used by index.html and live.html.
+// pair cards and pair profiles. Used by index.html and live/index.html.
 
 import { openStore } from '../store.js';
 import {
-  TOURNAMENT, GROUPS, FIXTURES, PAIR_BY_ID, PAIRS, QUALIFIERS_PER_GROUP, COURT_LABEL, DB_ROOT,
+  TOURNAMENT, GROUPS, FIXTURES, PAIR_BY_ID, PAIRS, QUALIFIERS_PER_GROUP, COURT_LABEL, DB_ROOT, sitePath,
 } from '../config.js';
 import {
   evalMatch, rulesFor, resolveFixtures, computeStandings, statusOf, courtNow, minutesFor,
@@ -330,7 +330,7 @@ function renderTeaser() {
     } else {
       body = `<span class="tag done">${t('done')}</span><span class="tz-m">${t('noMore')}</span>`;
     }
-    return `<a class="tz" href="live.html#courts-sec"><span class="tz-c">${esc(COURT_LABEL[n])}</span>${body}</a>`;
+    return `<a class="tz" href="${sitePath('live/#courts-sec')}"><span class="tz-c">${esc(COURT_LABEL[n])}</span>${body}</a>`;
   }).join('');
 }
 
@@ -466,7 +466,7 @@ function renderChampion() {
   const champ = fin?.status === 'done' ? name(res.FINAL?.[fin.winner]) : null;
   $$('[data-champion]').forEach(el => {
     el.hidden = !champ;
-    if (champ) el.innerHTML = `<div class="wrap"><img src="assets/e3/crest-240.webp" alt="" width="240" height="335">
+    if (champ) el.innerHTML = `<div class="wrap"><img src="${sitePath('assets/e3/crest-240.webp')}" alt="" width="240" height="335">
       <div><span class="label plain">${t('champsE3')}</span><b>${esc(champ)}</b></div></div>`;
   });
 }
@@ -557,7 +557,7 @@ export async function mountLive() {
   let first = true;
   store.subscribe(s => {
     state = s || {}; renderAll(); baseline = true;
-    // links like live.html#standings-sec: jump again once the tables have their real height
+    // links like live/#standings-sec: jump again once the tables have their real height
     if (first && location.hash) {
       first = false;
       const target = document.querySelector(location.hash);

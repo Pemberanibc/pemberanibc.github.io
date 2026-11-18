@@ -24,6 +24,9 @@ export const courtName = n => `Court ${COURT_LABEL[n] ?? n}`;
 // Firebase path everything for this edition is stored under.
 export const DB_ROOT = 'pt3';
 
+// Address of a file in this site, from any page (the home page sits at the root, the Match Centre in live/).
+export const sitePath = p => new URL('../' + p, import.meta.url).href;
+
 export const RULES = {
   // Group stage: one game to 21 (captain: "21 points best of 1").
   group: { bestOf: 1, target: 21, deuce: false, cap: 21 },

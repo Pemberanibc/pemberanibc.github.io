@@ -15,3 +15,4 @@ node_modules/
 # Draw film render scratch (finished videos live in tools/draw-film/out/)
 tools/draw-film/out/*.parts/
 tools/draw-film/out/*.wav
+tools/draw-film/out/*.mp4

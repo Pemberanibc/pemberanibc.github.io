@@ -1,7 +1,9 @@
+<p align="center"><img src=".github/social-preview.png" alt="Pemberani Tournament · Edition 3.0" width="760"></p>
+
 # Pemberani Tournament · Edition 3.0
 
 Campaign site, live scores, fixtures, standings and bracket for the Pemberani Badminton Club tournament.
-Static site for GitHub Pages, with Firebase Realtime Database for live scoring. No build step and no frameworks:
+Live at **https://pemberanibc.github.io/**. Static site for GitHub Pages, with Firebase Realtime Database for live scoring. No build step and no frameworks:
 plain HTML, CSS and JavaScript modules.
 
 **Edition 3.0:** Saturday 5 December 2026 · 10 AM – 5 PM · Andalas Sports Complex · Courts C4 and C5.
@@ -10,24 +12,28 @@ Both Edition 3.0 pages have an **EN / BM** switch at the top. The choice is reme
 
 | Page | Who uses it |
 | --- | --- |
-| `index.html` | Everyone: the Edition 3.0 story (hero, statement, champions, format, players and pots, prizes) with a short "on court now" strip linking to the Match Centre |
-| `live.html` | The Match Centre: live courts, latest results, match of the day, fixtures, standings with the qualification race, bracket and pairs. Share this on the day |
-| `score.html` | Umpires and committee: tap-to-score console (sign-in required) |
-| `draw/` | The live group draw, run from a phone. See `draw/README.md` |
-| `edition2/` | Edition 2.0 site and e-certificates, kept as an archive (`cert.html` in the root redirects there for old links) |
+| [`/`](https://pemberanibc.github.io/) | Everyone: the Edition 3.0 story (hero, statement, champions, format, players and pots, prizes) with a short "on court now" strip linking to the Match Centre |
+| [`/live/`](https://pemberanibc.github.io/live/) | The Match Centre: live courts, latest results, match of the day, fixtures, standings with the qualification race, bracket and pairs. Share this on the day |
+| [`/score/`](https://pemberanibc.github.io/score/) | Umpires and committee: tap-to-score console (sign-in required) |
+| [`/draw/`](https://pemberanibc.github.io/draw/) | The live group draw, run from a phone. See `draw/README.md` |
+| [`/edition2/`](https://pemberanibc.github.io/edition2/) | Edition 2.0 site and [e-certificates](https://pemberanibc.github.io/edition2/cert.html), kept as an archive |
+
+Old links (`live.html`, `score.html`, `cert.html`) still work: `404.html` sends them to the new address.
 
 ## Files
 
 ```
-index.html              Edition 3.0 campaign page
-live.html               Edition 3.0 match centre
-score.html              scorer console (sign-in)
-cert.html               redirect to edition2/cert.html, so old certificate links keep working
+index.html              home page: the Edition 3.0 campaign
+404.html                "page not found", and redirects for old links
+live/                   Match Centre
+score/                  scorer console (sign-in)
+draw/                   live group draw (own README)
+edition2/               Edition 2.0 archive: its own pages, code, styles and assets
 
 css/e3.css              Edition 3.0 styling
 css/score.css           scorer console styling
 js/config.js            ← dates, pairs, groups, rules, prizes, photos. Edit this one.
-js/e3/                  campaign page, match centre, animations, EN / BM text
+js/e3/                  campaign page, Match Centre, animations, EN / BM text
 js/logic.js             scoring rules, standings, bracket
 js/store.js             Firebase / demo data layer
 js/score.js             scorer console behaviour
@@ -35,20 +41,19 @@ js/firebase-config.js   Firebase web config (public by design, see Security)
 assets/                 crest.png and icon.png (shared by every page)
 assets/e3/              Edition 3.0 photos and the link-preview image (og.jpg)
 
-draw/                   live group draw (own README)
-edition2/               Edition 2.0 archive: its own pages, code, styles and assets/
 firebase/               recommended database security rules (own README)
-tools/draw-film/        how the group-draw video was made; not part of the website (own README)
+tools/draw-film/        source of the group-draw video; not part of the website (own README)
+.github/                repository branding: avatar.png and social-preview.png (not published)
 ```
 
 Everything in this repository is published by GitHub Pages, including `tools/`. Keep anything private out of it.
 
 ## Try it without Firebase
 
-- `index.html?demo` or `live.html?demo`: empty tournament. Scores are kept in this browser only.
-- `index.html?demo=sim`: fills in simulated results (all group matches, quarter-finals, a live semi-final)
+- `/?demo` or `/live/?demo`: empty tournament. Scores are kept in this browser only.
+- `/?demo=sim`: fills in simulated results (all group matches, quarter-finals, a live semi-final)
   so you can see standings, bracket and scoreboards working. Clear site data to reset.
-- Open `score.html?demo` in another tab and score a rally: the other tab updates instantly.
+- Open `/score/?demo` in another tab and score a rally: the other tab updates instantly.
 
 To preview locally, run this from the project folder and open http://localhost:8765/?demo=sim:
 
@@ -108,8 +113,8 @@ If Firebase can't be reached, the pages fall back to demo mode and show a yellow
 
 ## On the day
 
-- **Share `live.html`** in the WhatsApp group. It loads fast and goes straight to the scores.
-- **Umpires** open `score.html`, sign in, and pick their court (**C4 · Group A** or **C5 · Group B**). Tap **Start**,
+- **Share https://pemberanibc.github.io/live/** in the WhatsApp group. It loads fast and goes straight to the scores.
+- **Umpires** open https://pemberanibc.github.io/score/, sign in, and pick their court (**C4 · Group A** or **C5 · Group B**). Tap **Start**,
   choose who serves, then tap a team's panel for every rally. Groups stop at 21; knockouts are best of three to 15.
   **Undo** reverses the last rally, even after a match has ended.
 - **Knockouts fill themselves** once both groups are done (top 4 cross over: A1 v B4, B2 v A3, B1 v A4, A2 v B3).
