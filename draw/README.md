@@ -54,8 +54,8 @@ lives in that phone's browser.
 
 Optional. On the organiser's device open `draw/control.html`, section *Audience screen*, and sign in with a
 scorer account. Each step is then published to the tournament's Firebase Realtime Database at `pt3/draw`, and
-anyone who opens `draw/?cloud` follows it read-only. This needs internet on both sides and the `pt3` rule from
-the main README (public read, admin write). Without sign-in nothing is sent anywhere, and the `?cloud` screen
+anyone who opens `draw/?cloud` follows it read-only. This needs internet on both sides and the `pt3` rule in
+`firebase/database.rules.json` (public read, admin write). Without sign-in nothing is sent anywhere, and the `?cloud` screen
 says so instead of pretending to be in sync. Note: **Committee tools → reset** in the scorer console clears
 everything under `pt3`, including the published copy; the organiser's device keeps its own copy and publishes it
 again at the next step.

@@ -1,0 +1,17 @@
+# OS / editor clutter
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+.vscode/
+.idea/
+
+# Local tooling
+node_modules/
+*.log
+.env
+.env.*
+
+# Draw film render scratch (finished videos live in tools/draw-film/out/)
+tools/draw-film/out/*.parts/
+tools/draw-film/out/*.wav
