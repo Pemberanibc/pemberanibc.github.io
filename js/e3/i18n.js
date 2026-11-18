@@ -84,7 +84,7 @@ const BM = {
 
   'gl.k': 'Detik', 'gl.hint': 'Leret atau guna anak panah', 'gl.h1': 'Kisah', 'gl.h2': 'setakat ini.',
   'fn.1': 'Bermain dengan berani.', 'fn.2': 'Menang dengan bangga.',
-  'ft.e2': 'Edisi 2.0', 'ft.score': 'Pencatat skor',
+  'ft.e1': 'Edisi 1.0', 'ft.e2': 'Edisi 2.0', 'ft.score': 'Pencatat skor',
 
   'lv.h': 'Pemberani <span class="y">3.0</span><br>Langsung', 'lv.meta': '<span><b>Sab 05.12.2026</b></span><span>10 PG – 5 PTG</span><span>Andalas Sports Complex</span><span>Gelanggang C4 · C5</span>',
   'lv.oc': 'Di gelanggang', 'lv.now': 'Sekarang<span class="y">.</span>', 'lv.est': 'Masa adalah anggaran (kira-kira 12 minit setiap perlawanan kumpulan, 20 minit setiap perlawanan kalah mati) dan berubah mengikut rentak sebenar.',
