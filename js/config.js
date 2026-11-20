@@ -12,7 +12,7 @@ export const TOURNAMENT = {
   dateLabel: 'Saturday · 05.12.2026',
   timeLabel: '10 AM – 5 PM',
   venue: 'Andalas Sports Complex',
-  // Rough minutes per match, used for "approx. start" estimates.
+  // Rough minutes per match. Not shown on the site (it shows the order of play, not clock times).
   minutesPerGroupMatch: 12,
   minutesPerKnockoutMatch: 20,
 };
