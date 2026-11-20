@@ -3,10 +3,10 @@
 
 import { openStore } from '../store.js';
 import {
-  TOURNAMENT, GROUPS, FIXTURES, PAIR_BY_ID, PAIRS, QUALIFIERS_PER_GROUP, COURT_LABEL, DB_ROOT, sitePath,
+  GROUPS, FIXTURES, PAIR_BY_ID, PAIRS, QUALIFIERS_PER_GROUP, COURT_LABEL, DB_ROOT, sitePath,
 } from '../config.js';
 import {
-  evalMatch, rulesFor, resolveFixtures, computeStandings, statusOf, courtNow, minutesFor,
+  evalMatch, rulesFor, resolveFixtures, computeStandings, statusOf, courtNow,
 } from '../logic.js';
 import { t, locale } from './i18n.js';
 
@@ -38,17 +38,9 @@ const slotText = s => s.group ? `${groupName(s.group)} #${s.rank}`
   : s.winnerOf ? `${t('winner')} ${s.winnerOf}` : `${t('loser')} ${s.loserOf}`;
 const side = (f, s) => (f[s] ? name(f[s]) : f.stage === 'knockout' ? slotText(s === 'a' ? f.slotA : f.slotB) : t('tbd'));
 
-// ── Approximate start times: cumulative per court ────────────
-const START = new Date(TOURNAMENT.startsAt).getTime();
-const approx = {};
-for (const c of [1, 2]) {
-  let at = START;
-  FIXTURES.filter(f => f.court === c).sort((a, b) => a.order - b.order).forEach(f => {
-    approx[f.id] = at;
-    at += minutesFor(f) * 60000;
-  });
-}
-const clock = ms => new Date(ms).toLocaleTimeString(locale(), { hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Kuala_Lumpur' });
+// ── Order of play: each court plays its matches in order (no clock times) ──
+const playOrder = {};
+for (const c of [1, 2]) FIXTURES.filter(f => f.court === c).sort((a, b) => a.order - b.order).forEach((f, i) => { playOrder[f.id] = i; });
 
 function scoreLine(f) {
   const rec = state.matches?.[f.id];
@@ -92,7 +84,7 @@ function courtCard(n) {
   if (next) {
     return `<article class="court">${head(`<span class="tag">${t('upnext')}</span>`)}
       <div class="court-empty"><big>${esc(side(next, 'a'))}<br><span class="y">${t('v')}</span> ${esc(side(next, 'b'))}</big>
-        ${esc(fxLabel(next))} · ≈ ${clock(approx[next.id])}</div>
+        ${esc(fxLabel(next))}</div>
       ${after ? `<div class="court-ft">${t('after')} · ${vs(after)}</div>` : ''}
     </article>`;
   }
@@ -115,9 +107,9 @@ function fxRow(f) {
     mid = `<span class="mid">${main}${detail ? `<small>${detail}</small>` : ''}</span>`;
   }
   const tag = st === 'live' ? `<span class="tag live">${t('live')}</span>`
-    : st === 'done' ? `<span class="tag done">${t('ft')}</span>` : `<span class="tag">${esc(f.short)}</span>`;
+    : st === 'done' ? `<span class="tag done">${t('ft')}</span>` : `<span class="tag">${esc(f.stage === 'group' ? groupName(f.group) : fxLabel(f))}</span>`;
   return `<div class="fx ${st === 'live' ? 'is-live' : ''}">
-    <span class="when"><b>≈ ${clock(approx[f.id])}</b>${esc(courtName(f.court))}</span>
+    <span class="when"><b>${esc(f.short)}</b>${esc(courtName(f.court))}</span>
     <span class="side ${cls('a')}">${esc(side(f, 'a'))}</span>${mid}<span class="side ${cls('b')}">${esc(side(f, 'b'))}</span>
     <span class="st">${tag}</span></div>`;
 }
@@ -125,7 +117,7 @@ function fxRow(f) {
 function renderFixtures() {
   const el = $('#fixtures');
   if (!el) return;
-  let list = FIXTURES.map(f => res[f.id]).sort((a, b) => approx[a.id] - approx[b.id] || a.court - b.court);
+  let list = FIXTURES.map(f => res[f.id]).sort((a, b) => playOrder[a.id] - playOrder[b.id] || a.court - b.court);
   if (fxFilter === 'G1' || fxFilter === 'G2') list = list.filter(f => f.group === fxFilter);
   if (fxFilter === 'ko') list = list.filter(f => f.stage === 'knockout');
   if (fxFilter === 'results') list = list.filter(f => statusOf(state, f.id) === 'done').reverse();
@@ -326,7 +318,7 @@ function renderTeaser() {
       const { ev } = scoreLine(live);
       body = `<span class="tag live">${t('live')}</span><span class="tz-m">${esc(side(live, 'a'))} <b>${ev.cur.a}–${ev.cur.b}</b> ${esc(side(live, 'b'))}</span>`;
     } else if (next) {
-      body = `<span class="tag">${t('upnext')}</span><span class="tz-m">${esc(side(next, 'a'))} ${t('v')} ${esc(side(next, 'b'))} <small>≈ ${clock(approx[next.id])}</small></span>`;
+      body = `<span class="tag">${t('upnext')}</span><span class="tz-m">${esc(side(next, 'a'))} ${t('v')} ${esc(side(next, 'b'))} <small>${esc(next.short)}</small></span>`;
     } else {
       body = `<span class="tag done">${t('done')}</span><span class="tz-m">${t('noMore')}</span>`;
     }
@@ -345,7 +337,7 @@ function bm(id) {
     const sc = sl && st !== 'scheduled' ? sl.ev.games.filter(g => g.a || g.b).map(g => g[s]).join(' ') : '';
     return `<div class="br ${w ? (w === s ? 'w' : 'l') : ''}"><span class="n ${known ? '' : 'tbd'}">${esc(side(f, s))}</span><span class="s">${sc}</span></div>`;
   };
-  const tag = st === 'live' ? `<span class="tag live" style="padding:1px 6px">${t('live')}</span>` : `<span>${esc(COURT_LABEL[f.court])} · ≈ ${clock(approx[id])}</span>`;
+  const tag = st === 'live' ? `<span class="tag live" style="padding:1px 6px">${t('live')}</span>` : `<span>${esc(COURT_LABEL[f.court])}</span>`;
   return `<div class="bm ${st} ${w ? 'has-winner' : ''}"><div class="bh"><span>${esc(fxLabel(f))}</span>${tag}</div>${row('a')}${row('b')}</div>`;
 }
 function renderBracket() {
@@ -395,7 +387,7 @@ function renderProfile() {
     const me = f.a === id ? 'a' : 'b', them = me === 'a' ? 'b' : 'a';
     const st = statusOf(state, f.id);
     const sl = scoreLine(f);
-    let out = `≈ ${clock(approx[f.id])}`;
+    let out = '';
     if (st !== 'scheduled' && sl) {
       const won = state.matches[f.id].winner;
       const g = sl.ev.games.filter(x => x.a || x.b).map(x => `${x[me]}–${x[them]}`).join(', ');
