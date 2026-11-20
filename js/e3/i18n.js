@@ -42,7 +42,7 @@ const BM = {
   'n.players': 'Pemain', 'n.players2': 'Beregu', 'n.pairs': 'Pasangan', 'n.pairs2': 'Enam setiap kumpulan',
   'n.groups': 'Kumpulan', 'n.groups2': 'A dan B · liga', 'n.courts': 'Gelanggang', 'n.courts2': 'C4 dan C5',
   'n.matches': 'Perlawanan', 'n.matches2': '30 kumpulan · 8 kalah mati', 'n.edition': 'Edisi', 'n.edition2': 'Bab ketiga',
-  'ch.prov': 'Pasangan dan kumpulan belum muktamad sehingga cabutan disahkan.',
+  'ch.prov': 'Kumpulan disahkan melalui cabutan langsung pada 20 November 2026.',
 
   'def.stamp': 'Juara Edisi 2.0', 'def.k': 'Juara Bertahan',
   'def.lede': 'Juara Edisi 2.0. Mereka datang sebagai satu daripada dua belas pasangan dan pulang membawa mahkota. Kini setiap pasangan mahu merampasnya.',

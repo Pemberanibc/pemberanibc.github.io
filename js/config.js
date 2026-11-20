@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────
 //  Pemberani Tournament · Edition 3.0 — tournament data
 //  Everything the committee might want to change lives here.
-//  ⚠ Pairs, groups and prize amounts are PROVISIONAL until the draw.
+//  Groups confirmed by the live draw on 20 November 2026. Prize amounts still to be announced.
 // ─────────────────────────────────────────────────────────────
 
 export const TOURNAMENT = {
@@ -55,22 +55,33 @@ export const POTS = {
 };
 export const ROSTER = [...POTS.A, ...POTS.B].map(p => p.name);
 
-// The draw. Until it is confirmed every pair is a placeholder.
-// When the draw is made, replace each entry with e.g.
-//   { id: 'g1p1', name: 'Rasheed & Pok', players: ['Rasheed', 'Pok'] }
-// and set DRAW_CONFIRMED = true.
-export const DRAW_CONFIRMED = false;
-
-const tba = (id, n) => ({ id, name: `Pair ${String(n).padStart(2, '0')}`, players: null });
+// The draw: made live on 20 November 2026 (draw/). Pair numbers 1–6 follow the order each pair was
+// drawn into its group, and decide the order of play (GROUP_ORDER below).
+export const DRAW_CONFIRMED = true;
+export const DRAW_DATE = '2026-11-20';
 
 export const GROUPS = [
   {
     id: 'G1', name: 'Group A', court: 1,
-    pairs: [1, 2, 3, 4, 5, 6].map((n, i) => tba(`g1p${i + 1}`, n)),
+    pairs: [
+      { id: 'g1p1', name: 'Muizz & Fareez', players: ['Muizz', 'Fareez'] },
+      { id: 'g1p2', name: 'Aizat & Abg Mie', players: ['Aizat', 'Abg Mie'] },
+      { id: 'g1p3', name: 'Charlie & Azlan', players: ['Charlie', 'Azlan'] },
+      { id: 'g1p4', name: 'Rosli & Nataman', players: ['Rosli', 'Nataman'] },
+      { id: 'g1p5', name: 'Soul & Syaqir', players: ['Soul', 'Syaqir'] },
+      { id: 'g1p6', name: 'Fauzie Gigi & Jai', players: ['Fauzie Gigi', 'Jai'] },
+    ],
   },
   {
     id: 'G2', name: 'Group B', court: 2,
-    pairs: [7, 8, 9, 10, 11, 12].map((n, i) => tba(`g2p${i + 1}`, n)),
+    pairs: [
+      { id: 'g2p1', name: 'Nizam & Satbeer', players: ['Nizam', 'Satbeer'] },
+      { id: 'g2p2', name: 'Daus & Abg Fizan', players: ['Daus', 'Abg Fizan'] },
+      { id: 'g2p3', name: 'Syahir & Samad', players: ['Syahir', 'Samad'] },
+      { id: 'g2p4', name: 'Rasheed & Abdel', players: ['Rasheed', 'Abdel'] },
+      { id: 'g2p5', name: 'Adian & Pok', players: ['Adian', 'Pok'] },
+      { id: 'g2p6', name: 'Herman & Poknik', players: ['Herman', 'Poknik'] },
+    ],
   },
 ];
 
