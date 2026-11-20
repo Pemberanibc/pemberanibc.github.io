@@ -84,12 +84,9 @@ The pots are only used to draw the pairs. The tournament groups (A and B, six pa
 
 ## Before the day: what to update in `js/config.js`
 
-1. **The draw.** Replace each placeholder pair with the real one, then set `DRAW_CONFIRMED = true`:
-   ```js
-   { id: 'g1p1', name: 'Rasheed & Pok', players: ['Rasheed', 'Pok'] },
-   ```
-   Keep the `id`s as they are (`g1p1`…`g1p6` for Group A, `g2p1`…`g2p6` for Group B). Pair 1–6 order follows the
-   group poster, which decides the order of play (`GROUP_ORDER`).
+1. **The draw.** Done: the live draw on 20 November 2026 is in `GROUPS` and `DRAW_CONFIRMED = true`. Pair numbers
+   1–6 follow the order each pair was drawn into its group and decide the order of play (`GROUP_ORDER`). Keep the
+   `id`s as they are (`g1p1`…`g1p6` for Group A, `g2p1`…`g2p6` for Group B); scores are stored against them.
 2. **Knockout rules.** The captain said "15 points, best of 3". The config assumes win by 2, capped at 21
    (`knockout: { bestOf: 3, target: 15, deuce: true, cap: 21 }`). Change `cap` or `deuce` if the captain decides otherwise.
 3. **Prize amounts.** Update the Rewards text in `index.html` (English) and the `pz.cash` line in `js/e3/i18n.js` (BM).

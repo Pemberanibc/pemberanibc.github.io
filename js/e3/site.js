@@ -5,7 +5,7 @@ import {
 } from './motion.js';
 import { mountLive } from './live.js';
 import { wireLang, t } from './i18n.js';
-import { TOURNAMENT, POTS, PHOTOS, GALLERY_COUNT } from '../config.js';
+import { TOURNAMENT, POTS, PHOTOS, GALLERY_COUNT, GROUPS, DRAW_CONFIRMED } from '../config.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -27,6 +27,12 @@ function renderPots() {
 }
 renderPots();
 addEventListener('langchange', renderPots);
+
+// The drawn groups, in their order of play (pair 1–6), inside the Group A / Group B cards
+if (DRAW_CONFIRMED) document.querySelectorAll('.gpairs').forEach(ol => {
+  const g = GROUPS.find(x => x.id === ol.dataset.group);
+  if (g) ol.innerHTML = g.pairs.map((p, i) => `<li><b>${i + 1}</b><span>${esc(p.name)}</span></li>`).join('');
+});
 if (names && !reduced) {
   // a slow spotlight that wanders across the names once they are on screen
   (names.closest('.pot') || names).addEventListener('reveal', function start() {
